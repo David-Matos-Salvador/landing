@@ -170,10 +170,37 @@ window.addEventListener("resize", () => {
 });
 
 // ---------- Música ----------
-// Archivo propio y libre de derechos en music/bachata.mp3 (si no existe, solo hay visuales).
+// 1) Si hay SPOTIFY_TRACK_ID: reproductor oficial de Spotify (barra compacta, sin video).
+//    Quien no tenga sesión de Spotify en el navegador escucha un preview de 30 s.
+// 2) Si no: archivo propio y libre de derechos en music/bachata.mp3.
+const SPOTIFY_TRACK_ID = ""; // ← pegar aquí el ID de "Jr — La Estrella" (open.spotify.com/track/<ID>)
 const music = document.getElementById("music");
+const spotifyCard = document.getElementById("spotify");
+let spotify = null;
+
+if (SPOTIFY_TRACK_ID) {
+  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    IFrameAPI.createController(
+      document.getElementById("spotify-embed"),
+      { uri: `spotify:track:${SPOTIFY_TRACK_ID}`, width: "100%", height: 80 },
+      (controller) => { spotify = controller; }
+    );
+  };
+  const s = document.createElement("script");
+  s.src = "https://open.spotify.com/embed/iframe-api/v1";
+  s.async = true;
+  document.head.appendChild(s);
+}
 
 function setMusic(on) {
+  if (SPOTIFY_TRACK_ID) {
+    spotifyCard.classList.toggle("is-on", on);
+    spotifyCard.setAttribute("aria-hidden", String(!on));
+    if (!spotify) return;
+    if (on) spotify.play();
+    else spotify.pause();
+    return;
+  }
   if (on) music.play().catch(() => {}); // sin archivo o bloqueado: seguimos solo con visuales
   else music.pause();
 }
@@ -260,7 +287,7 @@ const INTRO_LINES = [
   { t: "✓ coolify · ✓ https · ✓ telegram", cls: "ok" },
 ];
 const BACHATA_LINES = [
-  { p: "$ ", t: "play bachata.mp3 --loop" },
+  { p: "$ ", t: SPOTIFY_TRACK_ID ? "spotify play \"La Estrella\"" : "play bachata.mp3 --loop" },
   { t: "♪ 1 · 2 · 3 · tap ♪", cls: "hl" },
 ];
 

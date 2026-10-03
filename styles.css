@@ -157,6 +157,27 @@ html, body {
 .btn[aria-pressed="true"] { background: var(--pink); color: #12000a; }
 .btn--ghost { border-color: var(--border); background: transparent; }
 
+/* Barra de Spotify: aparece al activar el modo bachata. */
+.spotify {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  z-index: 2;
+  width: min(360px, calc(100vw - 32px));
+  border-radius: 14px;
+  box-shadow: 0 0 32px rgba(255, 62, 165, 0.3);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.spotify.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.spotify iframe { display: block; border-radius: 12px; }
+
+@media (max-width: 640px) {
+  .spotify { left: 16px; right: 16px; width: auto; top: 56px; bottom: auto; transform: translateY(-16px); }
+}
+
 .noscript { position: fixed; bottom: 16px; left: 16px; color: var(--muted); }
 
 @keyframes pulse { 50% { opacity: 0.35; } }
