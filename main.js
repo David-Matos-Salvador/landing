@@ -173,7 +173,7 @@ window.addEventListener("resize", () => {
 // 1) Si hay SPOTIFY_TRACK_ID: reproductor oficial de Spotify (barra compacta, sin video).
 //    Quien no tenga sesión de Spotify en el navegador escucha un preview de 30 s.
 // 2) Si no: archivo propio y libre de derechos en music/bachata.mp3.
-const SPOTIFY_TRACK_ID = ""; // ← pegar aquí el ID de "Jr — La Estrella" (open.spotify.com/track/<ID>)
+const SPOTIFY_TRACK_ID = "4d9fwUVP1SKEJubBUOeBKB"; // ← pegar aquí el ID de "Jr — La Estrella" (open.spotify.com/track/<ID>)
 const music = document.getElementById("music");
 const spotifyCard = document.getElementById("spotify");
 let spotify = null;
