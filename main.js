@@ -169,38 +169,13 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ---------- Música: reproductor oficial de YouTube (IFrame API) ----------
-// Se crea al cargar la página para poder darle play dentro del mismo clic del usuario
-// (los navegadores solo permiten sonido si viene de una interacción).
-const SONG_ID = "8WrgA6mUiIY"; // Jr — La Estrella
-const nowPlaying = document.getElementById("nowplaying");
-let player = null;
-let playerReady = false;
-
-window.onYouTubeIframeAPIReady = () => {
-  player = new YT.Player("yt", {
-    videoId: SONG_ID,
-    width: 216,
-    height: 216,
-    playerVars: { playsinline: 1, rel: 0, loop: 1, playlist: SONG_ID, modestbranding: 1 },
-    events: {
-      onReady: () => {
-        playerReady = true;
-        if (bachata) player.playVideo(); // si el clic llegó antes de que cargara el reproductor
-      },
-    },
-  });
-};
-const ytScript = document.createElement("script");
-ytScript.src = "https://www.youtube.com/iframe_api";
-document.head.appendChild(ytScript);
+// ---------- Música ----------
+// Archivo propio y libre de derechos en music/bachata.mp3 (si no existe, solo hay visuales).
+const music = document.getElementById("music");
 
 function setMusic(on) {
-  nowPlaying.classList.toggle("is-on", on);
-  nowPlaying.setAttribute("aria-hidden", String(!on));
-  if (!playerReady) return;
-  if (on) player.playVideo();
-  else player.pauseVideo();
+  if (on) music.play().catch(() => {}); // sin archivo o bloqueado: seguimos solo con visuales
+  else music.pause();
 }
 
 // Modo bachata: ~128 BPM, paso básico 1-2-3-tap (el 4 es el "tap").
@@ -285,7 +260,7 @@ const INTRO_LINES = [
   { t: "✓ coolify · ✓ https · ✓ telegram", cls: "ok" },
 ];
 const BACHATA_LINES = [
-  { p: "$ ", t: "play \"Jr - La Estrella\" --loop" },
+  { p: "$ ", t: "play bachata.mp3 --loop" },
   { t: "♪ 1 · 2 · 3 · tap ♪", cls: "hl" },
 ];
 
