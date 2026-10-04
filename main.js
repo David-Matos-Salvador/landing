@@ -503,20 +503,119 @@ function animate() {
 
   poseAvatar(t, mode, beatLevel, sway);
 
-  // Cámara: parallax con el mouse y balanceo suave con la bachata.
+  // La lámpara "se enciende" al terminar el loader (con un parpadeo corto).
+  if (lampOn < 1 && !document.body.classList.contains("is-loading")) {
+    lampOn = Math.min(1, lampOn + dt * (reduceMotion ? 4 : 1.4));
+  }
+  const flicker = lampOn < 1 && !reduceMotion ? (Math.sin(t * 60) > 0.2 ? 1 : 0.35) : 1;
+  lampLight.intensity *= lampOn * flicker;
+  bulb.material.color.setScalar(0.25 + 0.75 * lampOn * flicker).multiply(BULB_COLOR);
+
+  // Cámara: sigue el scroll entre secciones + parallax con el mouse + balanceo con la bachata.
+  const shot = cameraShot(scrollProgress());
+  camTarget.position.lerp(shot.pos, Math.min(1, dt * 3));
+  camTarget.look.lerp(shot.look, Math.min(1, dt * 3));
   const swayCam = reduceMotion ? 0 : sway * 0.25;
-  camera.position.set(
-    CAM_BASE.x + pointer.x * 0.6 + swayCam,
-    CAM_BASE.y - pointer.y * 0.35,
-    CAM_BASE.z
-  );
-  camera.lookAt(LOOK_AT);
+  const px = reduceMotion ? 0 : pointer.x * 0.6;
+  const py = reduceMotion ? 0 : pointer.y * 0.35;
+  camera.position.set(camTarget.position.x + px + swayCam, camTarget.position.y - py, camTarget.position.z);
+  camera.lookAt(camTarget.look);
   room.rotation.y = reduceMotion ? 0 : Math.sin(t * 0.15) * 0.03;
 
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 
-loadAvatar().catch((err) => console.warn("No se pudo cargar el avatar:", err));
-document.fonts?.ready.then(() => { typing.next = 0; });
-requestAnimationFrame(animate);
+// ============================================================
+//  Cámara por secciones (Room → About → Work → Contact)
+// ============================================================
+const SHOTS = [
+  { id: "room", pos: CAM_BASE.clone(), look: LOOK_AT.clone() },
+  { id: "about", pos: new THREE.Vector3(1.2, 2.9, 1.6), look: new THREE.Vector3(-0.6, 2.5, -2.5) },   // la ventana
+  { id: "work", pos: new THREE.Vector3(-0.2, 1.9, 0.9), look: new THREE.Vector3(-2.2, 1.2, -0.6) },  // la laptop
+  { id: "contact", pos: new THREE.Vector3(8.6, 7.2, 9.8), look: new THREE.Vector3(-0.4, 1.0, -0.4) }, // todo el cuarto
+];
+const camTarget = { position: CAM_BASE.clone(), look: LOOK_AT.clone() };
+const sections = SHOTS.map((s) => document.getElementById(s.id));
+const smooth = (x) => x * x * (3 - 2 * x);
+
+// 0 = Room, 1 = About, 2 = Work, 3 = Contact (con decimales entre medio).
+function scrollProgress() {
+  const mid = window.scrollY + window.innerHeight * 0.5;
+  for (let i = sections.length - 1; i >= 0; i--) {
+    const el = sections[i];
+    if (mid >= el.offsetTop) {
+      const next = sections[i + 1];
+      if (!next) return i;
+      const span = next.offsetTop - el.offsetTop;
+      return i + Math.min(1, (mid - el.offsetTop) / span);
+    }
+  }
+  return 0;
+}
+
+const shotOut = { pos: new THREE.Vector3(), look: new THREE.Vector3() };
+function cameraShot(p) {
+  const i = Math.min(Math.floor(p), SHOTS.length - 1);
+  const j = Math.min(i + 1, SHOTS.length - 1);
+  // La cámara se queda en cada toma y viaja en la segunda mitad de cada sección.
+  const k = smooth(Math.max(0, (p - i - 0.45) / 0.55));
+  shotOut.pos.copy(SHOTS[i].pos).lerp(SHOTS[j].pos, k);
+  shotOut.look.copy(SHOTS[i].look).lerp(SHOTS[j].look, k);
+  return shotOut;
+}
+
+// Navbar: marca la sección visible.
+const navLinks = [...document.querySelectorAll(".nav__links a")];
+const sectionObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      navLinks.forEach((a) => a.setAttribute("aria-current", String(a.dataset.section === e.target.id)));
+    });
+  },
+  { rootMargin: "-45% 0px -45% 0px" }
+);
+sections.forEach((s) => sectionObserver.observe(s));
+
+// ============================================================
+//  Loader: progreso real (fuentes, shaders, avatar, primer frame)
+// ============================================================
+const loaderNum = document.getElementById("loader-num");
+const tasks = { fonts: false, shaders: false, avatar: !AVATAR_URL, frame: false };
+let shown = 0;
+const loaderStart = performance.now();
+let lampOn = 0;
+const BULB_COLOR = new THREE.Color("#FFE3B0");
+
+function loaderTick() {
+  const done = Object.values(tasks).filter(Boolean).length / Object.keys(tasks).length;
+  // El número sube suave hacia el progreso real; mínimo ~1.2 s para que se alcance a leer.
+  const minTime = reduceMotion ? 0 : Math.min(1, (performance.now() - loaderStart) / 1200);
+  const target = Math.min(done, minTime) * 100;
+  shown += (target - shown) * 0.12;
+  if (target - shown < 0.6) shown = target;
+  loaderNum.textContent = String(Math.round(shown));
+  if (shown >= 100) {
+    document.body.classList.remove("is-loading");
+    return;
+  }
+  requestAnimationFrame(loaderTick);
+}
+
+document.fonts?.ready.then(() => { tasks.fonts = true; typing.next = 0; });
+if (!document.fonts) tasks.fonts = true;
+// Compilar los shaders antes del primer frame (síncrono: compileAsync a veces no resuelve).
+try { renderer.compile(scene, camera); } catch (err) { console.warn(err); }
+tasks.shaders = true;
+// Red de seguridad: si algo se queda colgado, abrimos la página igual a los 8 s.
+setTimeout(() => Object.keys(tasks).forEach((k) => { tasks[k] = true; }), 8000);
+loadAvatar()
+  .catch((err) => console.warn("No se pudo cargar el avatar:", err))
+  .finally(() => { tasks.avatar = true; });
+
+requestAnimationFrame(() => {
+  animate();
+  tasks.frame = true;
+});
+requestAnimationFrame(loaderTick);

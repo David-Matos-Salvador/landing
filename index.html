@@ -9,7 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23FFB45C'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=M+PLUS+1+Code:wght@400;600&family=Klee+One:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script type="importmap">
     {
@@ -21,27 +21,75 @@
     }
   </script>
 </head>
-<body data-mode="lofi">
+<body data-mode="lofi" class="is-loading">
+  <!-- Pantalla de carga: el porcentaje refleja el progreso real (fuentes, escena, avatar). -->
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <p class="loader__line">Brewing coffee…</p>
+    <p class="loader__count" aria-label="Loading"><span id="loader-num">0</span>%</p>
+  </div>
+
   <canvas id="scene" aria-label="A small 3D room at night: rain on the window, a desk lamp and a laptop with code."></canvas>
 
-  <main class="page">
-    <header class="intro">
-      <h1 class="name">David<br>Matos</h1>
-      <p class="tagline">I build things for the web, and the server they run on.</p>
-      <nav class="links" aria-label="Profiles">
-        <a href="https://github.com/David-Matos-Salvador" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </header>
+  <nav class="nav" aria-label="Sections">
+    <a class="nav__brand" href="#room">dm</a>
+    <ul class="nav__links">
+      <li><a href="#room" data-section="room" aria-current="true">Room</a></li>
+      <li><a href="#about" data-section="about">About</a></li>
+      <li><a href="#work" data-section="work">Work</a></li>
+      <li><a href="#contact" data-section="contact">Contact</a></li>
+    </ul>
+  </nav>
 
-    <div class="player">
-      <button id="play" class="play" type="button" aria-pressed="false">
-        <span class="play__icon" aria-hidden="true"></span>
-        <span class="play__label">Play bachata</span>
-      </button>
-      <div class="spotify" id="spotify" aria-hidden="true">
-        <div id="spotify-embed"></div>
+  <main class="page">
+    <section id="room" class="section hero" data-section="room">
+      <header class="intro">
+        <h1 class="name">David<br>Matos</h1>
+        <p class="tagline">I build things for the web, and the server they run on.</p>
+      </header>
+      <div class="player">
+        <button id="play" class="play" type="button" aria-pressed="false">
+          <span class="play__icon" aria-hidden="true"></span>
+          <span class="play__label">Play bachata</span>
+        </button>
+        <p class="note note--play">press play, my favorite bachata is in here</p>
+        <div class="spotify" id="spotify" aria-hidden="true">
+          <div id="spotify-embed"></div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section id="about" class="section" data-section="about">
+      <h2 class="section__title">Hi, I'm David.</h2>
+      <p class="section__text">I'm a developer. By day I build web products; at night I tinker with my own server, where this page lives.</p>
+      <p class="section__text">When I'm not coding, I'm dancing bachata or watching anime. Usually with a coffee nearby.</p>
+      <p class="note">it rains a lot here, perfect coding weather</p>
+    </section>
+
+    <section id="work" class="section" data-section="work">
+      <h2 class="section__title">Things I've built</h2>
+      <ul class="work">
+        <li class="work__item">
+          <h3>This room</h3>
+          <p>A Three.js scene that turns into a bachata party when you press play.</p>
+        </li>
+        <li class="work__item">
+          <h3>My own cloud</h3>
+          <p>A VPS with Coolify: HTTPS, deploys from GitHub and alerts on Telegram.</p>
+        </li>
+        <li class="work__item">
+          <h3>gymapp</h3>
+          <p>A gym management app with Next.js, Prisma and Postgres. In testing.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section id="contact" class="section" data-section="contact">
+      <h2 class="section__title">Say hi</h2>
+      <p class="section__text">The easiest way to find me and my code.</p>
+      <div class="links">
+        <a href="https://github.com/David-Matos-Salvador" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section>
   </main>
 
   <audio id="music" src="music/bachata.mp3" preload="none" loop></audio>
