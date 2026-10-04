@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
 // ============================================================
 //  Config
@@ -11,79 +12,76 @@ const BPM = 128;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const PALETTE = {
-  plum: new THREE.Color("#1B1530"),
-  violet: new THREE.Color("#3A2F5B"),
+  plum: new THREE.Color("#0F1E1A"),   // fondo: noche de bosque
+  violet: new THREE.Color("#23392F"),
   amber: new THREE.Color("#FFB45C"),
-  teal: new THREE.Color("#6FD3D8"),
+  teal: new THREE.Color("#8FD6B8"),   // menta: lluvia y luz de la pantalla
   rose: new THREE.Color("#E86A92"),
   paper: new THREE.Color("#F2E6D8"),
-  ink: new THREE.Color("#120D22"),
+  ink: new THREE.Color("#08120F"),
 };
 
 // ============================================================
 //  Renderer, escena y cámara
 // ============================================================
 const canvas = document.getElementById("scene");
+const isSmall = window.matchMedia("(max-width: 760px)").matches;
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.35;
+// Sombras suaves reales: lo que le da profundidad al cuarto sin agregar objetos.
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 scene.background = PALETTE.plum.clone();
 
 const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-const LOOK_AT = new THREE.Vector3(-0.7, 1.45, -0.7);
+const LOOK_AT = new THREE.Vector3(-0.7, 1.35, -0.7);
 const CAM_BASE = new THREE.Vector3(6.5, 4.7, 7.6);
 
-// Sombreado "anime": 3 tonos duros en vez de degradado suave.
-const toonRamp = (() => {
-  const data = new Uint8Array([70, 70, 70, 255, 160, 160, 160, 255, 255, 255, 255, 255]);
-  const tex = new THREE.DataTexture(data, 3, 1, THREE.RGBAFormat);
-  tex.minFilter = tex.magFilter = THREE.NearestFilter;
-  tex.needsUpdate = true;
-  return tex;
-})();
-const toon = (color) => new THREE.MeshToonMaterial({ color, gradientMap: toonRamp });
+// Estilo low-poly limpio: materiales mate de color plano y bordes apenas redondeados.
+const matte = (color) => new THREE.MeshStandardMaterial({ color, roughness: 0.92, metalness: 0 });
 
-// Contorno tipo dibujo: copia del objeto un poco más grande, por dentro y en tinta.
-const outlineMat = new THREE.MeshBasicMaterial({ color: PALETTE.ink, side: THREE.BackSide });
-function withOutline(mesh, thickness = 0.03) {
-  const shell = new THREE.Mesh(mesh.geometry, outlineMat);
-  mesh.geometry.computeBoundingBox();
-  const size = new THREE.Vector3();
-  mesh.geometry.boundingBox.getSize(size);
-  shell.scale.set(
-    1 + thickness / Math.max(size.x, 0.01) * 2,
-    1 + thickness / Math.max(size.y, 0.01) * 2,
-    1 + thickness / Math.max(size.z, 0.01) * 2
-  );
-  mesh.add(shell);
-  return mesh;
-}
-
-function box(w, h, d, color, pos, outline = true) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), toon(color));
+function block(w, h, d, color, pos, radius = 0.025) {
+  const r = Math.min(radius, w / 2.2, h / 2.2, d / 2.2);
+  const m = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 2, r), matte(color));
   m.position.set(...pos);
-  if (outline) withOutline(m);
+  m.castShadow = true;
+  m.receiveShadow = true;
   return m;
 }
 
 // ============================================================
-//  El cuarto (diorama cortado, como casa de muñecas)
+//  El cuarto: solo lo esencial (piso, 2 paredes, ventana, escritorio, laptop, lámpara, silla)
 // ============================================================
 const room = new THREE.Group();
 scene.add(room);
 
 const ROOM = { w: 6, h: 4.2, d: 5 };
-room.add(box(ROOM.w, 0.2, ROOM.d, "#4A3B6E", [0, -0.1, 0]));                        // piso
-room.add(box(ROOM.w, ROOM.h, 0.2, "#3A2F5B", [0, ROOM.h / 2, -ROOM.d / 2 - 0.1]));   // pared fondo
-room.add(box(0.2, ROOM.h, ROOM.d, "#33295A", [-ROOM.w / 2 - 0.1, ROOM.h / 2, 0]));   // pared izquierda
-room.add(box(2.4, 0.02, 2.0, "#5C3F72", [-0.9, 0.01, -0.5], false));                 // alfombra
+const C = {
+  floor: "#6B513F",
+  wallBack: "#2F4D41",
+  wallSide: "#294437",
+  wood: "#A2774F",
+  woodDark: "#7E5A3E",
+  metal: "#1E2E28",
+  laptop: "#C9CFC8",
+  chair: "#22352E",
+  rug: "#C2A27A",
+};
 
-// Ventana con lluvia (shader) en la pared del fondo.
+room.add(block(ROOM.w, 0.16, ROOM.d, C.floor, [0, -0.08, 0], 0.02));
+room.add(block(ROOM.w, ROOM.h, 0.14, C.wallBack, [0, ROOM.h / 2, -ROOM.d / 2 - 0.07], 0.02));
+room.add(block(0.14, ROOM.h, ROOM.d, C.wallSide, [-ROOM.w / 2 - 0.07, ROOM.h / 2, 0], 0.02));
+
+// Ventana con lluvia (shader) en la pared del fondo: marco simple, sin cruces.
 const rainUniforms = { uTime: { value: 0 }, uTint: { value: PALETTE.teal.clone() } };
+const WIN = { x: -0.5, y: 2.5, w: 1.7, h: 1.4 };
 const windowGlass = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.0, 1.6),
+  new THREE.PlaneGeometry(WIN.w, WIN.h),
   new THREE.ShaderMaterial({
     uniforms: rainUniforms,
     vertexShader: /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
@@ -91,44 +89,48 @@ const windowGlass = new THREE.Mesh(
       uniform float uTime; uniform vec3 uTint; varying vec2 vUv;
       float hash(float n){ return fract(sin(n) * 43758.5453); }
       void main(){
-        vec3 night = mix(vec3(0.07,0.06,0.16), uTint * 0.35, vUv.y * 0.6);
+        vec3 night = mix(vec3(0.06,0.06,0.14), uTint * 0.3, vUv.y * 0.55);
         float rain = 0.0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
           float fi = float(i);
-          float cols = 38.0 + fi * 17.0;
+          float cols = 34.0 + fi * 19.0;
           float col = floor(vUv.x * cols);
           float speed = 0.6 + hash(col + fi * 7.0) * 0.9;
           float y = fract(vUv.y + uTime * speed + hash(col * 3.1 + fi));
           float streak = smoothstep(0.0, 0.08, y) * smoothstep(0.22, 0.08, y);
           float thin = smoothstep(0.5, 0.0, abs(fract(vUv.x * cols) - 0.5) * 6.0);
-          rain += streak * thin * (0.35 - fi * 0.08);
+          rain += streak * thin * (0.3 - fi * 0.08);
         }
-        // Luces lejanas de la ciudad.
-        float city = step(0.985, hash(floor(vUv.x * 60.0) + floor(vUv.y * 30.0) * 61.0)) * step(vUv.y, 0.35);
-        gl_FragColor = vec4(night + uTint * rain + vec3(1.0,0.8,0.5) * city * 0.6, 1.0);
+        // Luna y un reflejo diagonal suave: que se lea como vidrio.
+        float moon = smoothstep(0.075, 0.065, distance(vUv * vec2(1.21, 1.0), vec2(0.82, 0.74)));
+        float halo = smoothstep(0.3, 0.0, distance(vUv * vec2(1.21, 1.0), vec2(0.82, 0.74))) * 0.18;
+        float glare = smoothstep(0.06, 0.0, abs(vUv.x - vUv.y * 0.6 - 0.12)) * 0.07;
+        vec3 col = night + uTint * rain + vec3(1.0, 0.96, 0.85) * (moon * 0.9 + halo) + glare;
+        gl_FragColor = vec4(col, 1.0);
       }`,
   })
 );
-windowGlass.position.set(-0.6, 2.55, -ROOM.d / 2 + 0.005);
+windowGlass.position.set(WIN.x, WIN.y, -ROOM.d / 2 + 0.002);
 room.add(windowGlass);
-// Marco y cruz de la ventana.
-const frameColor = "#2A2148";
-[[2.16, 0.1, 0, 0.84], [2.16, 0.1, 0, -0.84], [0.1, 1.78, 1.04, 0], [0.1, 1.78, -1.04, 0], [0.06, 1.6, 0, 0], [2.0, 0.06, 0, 0]].forEach(
-  ([w, h, x, y]) => room.add(box(w, h, 0.08, frameColor, [-0.6 + x, 2.55 + y, -ROOM.d / 2 + 0.04]))
-);
+const FW = 0.07; // grosor del marco
+room.add(block(WIN.w + FW * 2, FW, 0.06, C.metal, [WIN.x, WIN.y + WIN.h / 2 + FW / 2, -ROOM.d / 2 + 0.03]));
+room.add(block(WIN.w + FW * 2, FW, 0.06, C.metal, [WIN.x, WIN.y - WIN.h / 2 - FW / 2, -ROOM.d / 2 + 0.03]));
+room.add(block(FW, WIN.h, 0.06, C.metal, [WIN.x - WIN.w / 2 - FW / 2, WIN.y, -ROOM.d / 2 + 0.03]));
+room.add(block(FW, WIN.h, 0.06, C.metal, [WIN.x + WIN.w / 2 + FW / 2, WIN.y, -ROOM.d / 2 + 0.03]));
+room.add(block(WIN.w + 0.3, 0.05, 0.2, C.metal, [WIN.x, WIN.y - WIN.h / 2 - FW - 0.02, -ROOM.d / 2 + 0.1])); // alféizar
+room.add(block(0.045, WIN.h, 0.05, C.metal, [WIN.x, WIN.y, -ROOM.d / 2 + 0.03]));          // parante
+room.add(block(WIN.w, 0.045, 0.05, C.metal, [WIN.x, WIN.y + 0.12, -ROOM.d / 2 + 0.03]));    // travesaño
 
-// Escritorio contra la pared izquierda.
-const DESK = { x: -2.2, z: -0.6, top: 1.05 };
-room.add(box(1.25, 0.08, 2.5, "#8A5A44", [DESK.x, DESK.top, DESK.z]));
-[[-0.5, -1.1], [-0.5, 1.1], [0.5, -1.1], [0.5, 1.1]].forEach(([dx, dz]) =>
-  room.add(box(0.08, DESK.top, 0.08, "#6B4433", [DESK.x + dx, DESK.top / 2, DESK.z + dz]))
-);
+// Escritorio contra la pared izquierda: tablero + 2 patas tipo panel.
+const DESK = { x: -2.2, z: -0.6, top: 1.0 };
+room.add(block(1.2, 0.07, 2.3, C.wood, [DESK.x, DESK.top, DESK.z], 0.03));
+[-1.0, 1.0].forEach((dz) => room.add(block(1.05, DESK.top - 0.04, 0.06, C.woodDark, [DESK.x, (DESK.top - 0.04) / 2, DESK.z + dz])));
 
-// Laptop: base + pantalla con código (CanvasTexture) mirando hacia la silla (+x).
+// Laptop: base + tapa + pantalla con código (CanvasTexture), mirando hacia la silla (+x).
 const laptop = new THREE.Group();
-laptop.position.set(DESK.x - 0.05, DESK.top + 0.04, DESK.z);
+laptop.position.set(DESK.x - 0.05, DESK.top + 0.035, DESK.z);
 room.add(laptop);
-laptop.add(box(0.62, 0.03, 0.9, "#C9C3D9", [0, 0.015, 0]));
+laptop.add(block(0.6, 0.025, 0.88, C.laptop, [0, 0.0125, 0], 0.01));
 const screenCanvas = document.createElement("canvas");
 screenCanvas.width = 512;
 screenCanvas.height = 320;
@@ -136,104 +138,138 @@ const screenCtx = screenCanvas.getContext("2d");
 const screenTex = new THREE.CanvasTexture(screenCanvas);
 screenTex.colorSpace = THREE.SRGBColorSpace;
 const lid = new THREE.Group();
-lid.position.set(-0.3, 0.03, 0);
-lid.rotation.z = -0.32; // la tapa inclinada hacia atrás
+lid.position.set(-0.29, 0.025, 0);
+lid.rotation.z = -0.3;
 laptop.add(lid);
-lid.add(box(0.03, 0.58, 0.9, "#C9C3D9", [0, 0.29, 0]));
-const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.84, 0.52), new THREE.MeshBasicMaterial({ map: screenTex }));
-screen.position.set(0.017, 0.29, 0);
+lid.add(block(0.025, 0.56, 0.88, C.laptop, [0, 0.28, 0], 0.01));
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.82, 0.5), new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }));
+screen.position.set(0.014, 0.28, 0);
 screen.rotation.y = Math.PI / 2;
 lid.add(screen);
-const screenLight = new THREE.PointLight(PALETTE.teal, 1.2, 2.2, 2);
+const screenLight = new THREE.PointLight(PALETTE.teal, 1.4, 2.4, 2);
 screenLight.position.set(DESK.x + 0.4, DESK.top + 0.4, DESK.z);
 room.add(screenLight);
 
-// Lámpara de escritorio.
+// Lámpara: base, brazo y pantalla cerrada; su luz proyecta sombras sobre el escritorio.
 const lamp = new THREE.Group();
-lamp.position.set(DESK.x - 0.3, DESK.top + 0.04, DESK.z - 0.95);
+lamp.position.set(DESK.x - 0.25, DESK.top + 0.035, DESK.z - 0.85);
 room.add(lamp);
-lamp.add(box(0.28, 0.05, 0.28, "#2A2148", [0, 0.025, 0]));
-lamp.add(box(0.05, 0.75, 0.05, "#2A2148", [0, 0.4, 0]));
-const shade = withOutline(new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.25, 20, 1, true), toon("#FFB45C")));
-shade.position.set(0.12, 0.78, 0.1);
-shade.rotation.z = -0.5;
-lamp.add(shade);
-const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), new THREE.MeshBasicMaterial({ color: "#FFE3B0" }));
-bulb.position.set(0.16, 0.7, 0.12);
-lamp.add(bulb);
-const lampLight = new THREE.PointLight(PALETTE.amber, 9, 6, 1.6);
-lampLight.position.set(DESK.x + 0.1, DESK.top + 0.75, DESK.z - 0.75);
-room.add(lampLight);
-
-// Taza con vapor.
-const mug = withOutline(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.16, 16), toon("#E86A92")));
-mug.position.set(DESK.x + 0.15, DESK.top + 0.12, DESK.z + 0.85);
-room.add(mug);
-const steam = new THREE.Points(
-  new THREE.BufferGeometry().setAttribute("position", new THREE.BufferAttribute(new Float32Array(18 * 3), 3)),
-  new THREE.PointsMaterial({ color: "#F2E6D8", size: 0.05, transparent: true, opacity: 0.45, depthWrite: false })
+const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.15, 0.04, 24), matte(C.metal));
+lampBase.position.y = 0.02;
+lampBase.castShadow = true;
+lamp.add(lampBase);
+lamp.add(block(0.035, 0.7, 0.035, C.metal, [0, 0.39, 0], 0.012));
+const shade = new THREE.Mesh(
+  new THREE.ConeGeometry(0.17, 0.22, 24),
+  new THREE.MeshStandardMaterial({ color: "#F2A65A", emissive: "#7A3E10", roughness: 0.8 })
 );
-room.add(steam);
+shade.position.set(0.1, 0.76, 0.08);
+shade.rotation.z = -0.55;
+shade.castShadow = true;
+lamp.add(shade);
+const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 16), new THREE.MeshBasicMaterial({ color: "#FFE3B0", toneMapped: false }));
+bulb.position.set(0.15, 0.68, 0.11);
+lamp.add(bulb);
+const lampLight = new THREE.SpotLight(PALETTE.amber, 14, 4.5, 0.7, 0.7, 1.4);
+lampLight.position.set(DESK.x - 0.1, DESK.top + 0.72, DESK.z - 0.74);
+lampLight.target.position.set(DESK.x + 0.35, DESK.top, DESK.z + 0.2); // apunta al escritorio, no al piso
+lampLight.castShadow = true;
+lampLight.shadow.mapSize.set(isSmall ? 512 : 1024, isSmall ? 512 : 1024);
+lampLight.shadow.bias = -0.0008;
+lampLight.shadow.radius = 6;
+room.add(lampLight, lampLight.target);
 
-// Silla frente al escritorio (el personaje mira hacia -x).
-const CHAIR = { x: -1.15, z: -0.6, seat: 0.62 };
+// Silla simple frente al escritorio (el personaje mira hacia -x).
+const CHAIR = { x: -1.15, z: -0.6, seat: 0.6 };
 const chair = new THREE.Group();
 chair.position.set(CHAIR.x, 0, CHAIR.z);
 room.add(chair);
-chair.add(box(0.7, 0.1, 0.7, "#2F2650", [0, CHAIR.seat, 0]));
-chair.add(box(0.1, 0.85, 0.7, "#2F2650", [0.32, CHAIR.seat + 0.47, 0]));
-chair.add(box(0.06, CHAIR.seat, 0.06, "#1F193A", [0, CHAIR.seat / 2, 0]));
-chair.add(box(0.7, 0.05, 0.07, "#1F193A", [0, 0.03, 0], false));
-chair.add(box(0.07, 0.05, 0.7, "#1F193A", [0, 0.03, 0], false));
+chair.add(block(0.62, 0.09, 0.62, C.chair, [0, CHAIR.seat, 0], 0.04));
+chair.add(block(0.08, 0.72, 0.58, C.chair, [0.29, CHAIR.seat + 0.42, 0], 0.035));
+chair.add(block(0.06, CHAIR.seat - 0.06, 0.06, C.metal, [0, (CHAIR.seat - 0.06) / 2 + 0.04, 0], 0.02));
+const chairBase = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 24), matte(C.metal));
+chairBase.position.y = 0.02;
+chairBase.castShadow = chairBase.receiveShadow = true;
+chair.add(chairBase);
 // Hoodie colgado en el respaldo mientras no hay avatar.
-const hoodie = box(0.16, 0.5, 0.62, "#E86A92", [0.4, CHAIR.seat + 0.55, 0]);
+const hoodie = block(0.14, 0.46, 0.56, "#D9628A", [0.36, CHAIR.seat + 0.5, 0], 0.05);
 chair.add(hoodie);
 
-// Estante con libros y una planta.
-room.add(box(1.6, 0.06, 0.45, "#6B4433", [1.4, 2.4, -ROOM.d / 2 + 0.25]));
-["#6FD3D8", "#FFB45C", "#E86A92", "#F2E6D8", "#9C8BD6"].forEach((c, i) =>
-  room.add(box(0.16, 0.4 + (i % 3) * 0.08, 0.32, c, [0.8 + i * 0.22, 2.63 + (i % 3) * 0.04, -ROOM.d / 2 + 0.25]))
-);
-const pot = withOutline(new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.17, 0.4, 16), toon("#C46A4A")));
-pot.position.set(2.45, 0.2, -2.0);
-room.add(pot);
-for (let i = 0; i < 5; i++) {
-  const leaf = withOutline(new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 8), toon("#5FA37A")));
-  leaf.scale.set(0.5, 1.4, 0.5);
-  const a = (i / 5) * Math.PI * 2;
-  leaf.position.set(2.45 + Math.cos(a) * 0.14, 0.75 + (i % 2) * 0.15, -2.0 + Math.sin(a) * 0.14);
-  leaf.rotation.set(Math.sin(a) * 0.4, 0, -Math.cos(a) * 0.4);
-  room.add(leaf);
-}
+// Alfombra bajo la silla.
+const rug = new THREE.Mesh(new RoundedBoxGeometry(2.0, 0.02, 1.5, 2, 0.01), matte(C.rug));
+rug.position.set(-1.0, 0.011, -0.55);
+rug.receiveShadow = true;
+room.add(rug);
 
-// Polvo flotando en la luz de la lámpara.
-const DUST = 70;
-const dustPos = new Float32Array(DUST * 3);
-for (let i = 0; i < DUST; i++) {
-  dustPos[i * 3] = DESK.x + 0.4 + Math.random() * 1.6;
-  dustPos[i * 3 + 1] = 0.8 + Math.random() * 2.2;
-  dustPos[i * 3 + 2] = DESK.z - 1.2 + Math.random() * 2.4;
-}
-const dust = new THREE.Points(
-  new THREE.BufferGeometry().setAttribute("position", new THREE.BufferAttribute(dustPos, 3)),
-  new THREE.PointsMaterial({ color: PALETTE.amber, size: 0.03, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending })
-);
-room.add(dust);
+// Repisa flotante con pocos libros (pared del fondo, a la derecha de la ventana).
+const SHELF = { x: 1.7, z: -ROOM.d / 2 + 0.17 };
+[1.65, 2.4].forEach((y, row) => {
+  room.add(block(1.3, 0.05, 0.3, C.wood, [SHELF.x, y, SHELF.z], 0.015));
+  const books = row === 0
+    ? [["#E8A24E", 0.36], ["#D9628A", 0.42], ["#F2E6D8", 0.32], ["#8FD6B8", 0.38]]
+    : [["#5E8C78", 0.34], ["#E8A24E", 0.4]];
+  let x = SHELF.x - 0.52;
+  books.forEach(([color, h]) => {
+    room.add(block(0.09, h, 0.22, color, [x, y + 0.025 + h / 2, SHELF.z], 0.012));
+    x += 0.11;
+  });
+  if (row === 1) {
+    const leaning = block(0.09, 0.36, 0.22, "#F2E6D8", [x + 0.07, y + 0.2, SHELF.z], 0.012);
+    leaning.rotation.z = -0.32; // un libro inclinado: detalle humano
+    room.add(leaning);
+  }
+});
+
+// Cuadro sobre el escritorio (arte original: luna sobre colinas), en la pared izquierda.
+const artCanvas = document.createElement("canvas");
+artCanvas.width = 320;
+artCanvas.height = 240;
+(() => {
+  const g = artCanvas.getContext("2d");
+  const sky = g.createLinearGradient(0, 0, 0, 240);
+  sky.addColorStop(0, "#14332B");
+  sky.addColorStop(1, "#3E6B5A");
+  g.fillStyle = sky;
+  g.fillRect(0, 0, 320, 240);
+  g.fillStyle = "#F2E6D8";
+  g.beginPath(); g.arc(222, 70, 26, 0, Math.PI * 2); g.fill();
+  [[40, 40], [90, 25], [140, 55], [270, 120], [300, 40]].forEach(([x, y]) => g.fillRect(x, y, 3, 3));
+  g.fillStyle = "#24493D";
+  g.beginPath(); g.moveTo(0, 240); g.quadraticCurveTo(90, 120, 200, 200); g.quadraticCurveTo(260, 170, 320, 190); g.lineTo(320, 240); g.fill();
+  g.fillStyle = "#183229";
+  g.beginPath(); g.moveTo(0, 210); g.quadraticCurveTo(140, 160, 320, 235); g.lineTo(320, 240); g.lineTo(0, 240); g.fill();
+})();
+const artTex = new THREE.CanvasTexture(artCanvas);
+artTex.colorSpace = THREE.SRGBColorSpace;
+const ART = { y: 2.55, z: DESK.z, w: 1.05, h: 0.78 };
+room.add(block(0.05, ART.h + 0.1, ART.w + 0.1, C.woodDark, [-ROOM.w / 2 + 0.03, ART.y, ART.z], 0.01));
+const art = new THREE.Mesh(new THREE.PlaneGeometry(ART.w, ART.h), new THREE.MeshStandardMaterial({ map: artTex, roughness: 0.9 }));
+art.position.set(-ROOM.w / 2 + 0.06, ART.y, ART.z);
+art.rotation.y = Math.PI / 2;
+room.add(art);
+
 
 // ============================================================
 //  Luces: modo lofi (azul) ↔ modo bachata (rosa)
 // ============================================================
-const hemi = new THREE.HemisphereLight("#6C7BD8", "#1B1530", 1.1);
+const hemi = new THREE.HemisphereLight("#A9CBBB", "#2A3A31", 1.4);
 scene.add(hemi);
-const windowLight = new THREE.DirectionalLight(PALETTE.teal, 1.4);
-windowLight.position.set(-0.6, 3.5, 3);
-scene.add(windowLight);
+// Luz principal suave (luna) con sombras.
+const windowLight = new THREE.DirectionalLight("#C4E5D6", 1.3);
+windowLight.position.set(3.5, 6, 4);
+windowLight.target.position.set(-0.8, 0.5, -0.8);
+windowLight.castShadow = true;
+windowLight.shadow.mapSize.set(isSmall ? 1024 : 2048, isSmall ? 1024 : 2048);
+Object.assign(windowLight.shadow.camera, { left: -4.5, right: 4.5, top: 4.5, bottom: -4.5, near: 0.5, far: 20 });
+windowLight.shadow.bias = -0.0006;
+windowLight.shadow.radius = 5;
+scene.add(windowLight, windowLight.target);
 const partyLight = new THREE.PointLight(PALETTE.rose, 0, 7, 1.4);
 partyLight.position.set(0.6, 3.2, 0.6);
 scene.add(partyLight);
 
 const MODES = {
-  lofi: { hemiSky: new THREE.Color("#6C7BD8"), window: PALETTE.teal, screen: PALETTE.teal, party: 0, rain: PALETTE.teal },
+  lofi: { hemiSky: new THREE.Color("#A9CBBB"), window: new THREE.Color("#C4E5D6"), screen: PALETTE.teal, party: 0, rain: PALETTE.teal },
   bachata: { hemiSky: new THREE.Color("#C05C9A"), window: PALETTE.rose, screen: PALETTE.rose, party: 7, rain: PALETTE.rose },
 };
 
@@ -317,7 +353,7 @@ async function loadAvatar() {
   vrm = gltf.userData.vrm;
   VRMUtils.removeUnnecessaryVertices(gltf.scene);
   VRMUtils.rotateVRM0(vrm); // los VRM 0.x miran al revés; así todos miran a +z
-  vrm.scene.traverse((o) => { if (o.isMesh) o.frustumCulled = false; });
+  vrm.scene.traverse((o) => { if (o.isMesh) { o.frustumCulled = false; o.castShadow = true; } });
   vrm.scene.rotation.y = -Math.PI / 2; // +z → -x: mirando a la laptop
   vrm.scene.position.set(CHAIR.x - 0.05, 0, CHAIR.z);
   scene.add(vrm.scene);
@@ -467,8 +503,8 @@ function animate() {
   screenLight.color.copy(MODES.lofi.screen).lerp(MODES.bachata.screen, mix);
   rainUniforms.uTint.value.copy(MODES.lofi.rain).lerp(MODES.bachata.rain, mix);
   partyLight.intensity = mix * (MODES.bachata.party * (0.55 + beatLevel * 0.6));
-  scene.background.copy(PALETTE.plum).lerp(tmpColor.set("#2A1433"), mix * 0.8);
-  lampLight.intensity = 9 * (1 - mix * 0.35) + Math.sin(t * 13) * 0.08;
+  scene.background.copy(PALETTE.plum).lerp(tmpColor.set("#2A1424"), mix * 0.8);
+  lampLight.intensity = 14 * (1 - mix * 0.35) + Math.sin(t * 13) * 0.1;
 
   rainUniforms.uTime.value = t * 0.35 * motion;
 
@@ -477,26 +513,6 @@ function animate() {
     mode === "bachata" ? drawEqualizer(t) : drawCode(t);
     screenTex.needsUpdate = true;
   }
-
-  // Vapor de la taza.
-  const sp = steam.geometry.attributes.position.array;
-  for (let i = 0; i < 18; i++) {
-    const life = (t * 0.35 * motion + i / 18) % 1;
-    sp[i * 3] = mug.position.x + Math.sin(life * 6 + i) * 0.04;
-    sp[i * 3 + 1] = mug.position.y + 0.1 + life * 0.45;
-    sp[i * 3 + 2] = mug.position.z + Math.cos(life * 5 + i) * 0.04;
-  }
-  steam.geometry.attributes.position.needsUpdate = true;
-  steam.material.opacity = 0.45;
-
-  // Polvo flotando (y "brincando" con el beat).
-  const dp = dust.geometry.attributes.position.array;
-  for (let i = 0; i < DUST; i++) {
-    dp[i * 3 + 1] += (0.02 + beatLevel * 0.25) * dt * motion;
-    if (dp[i * 3 + 1] > 3.1) dp[i * 3 + 1] = 0.8;
-  }
-  dust.geometry.attributes.position.needsUpdate = true;
-  dust.material.color.copy(PALETTE.amber).lerp(PALETTE.rose, mix);
 
   // Hoodie (sin avatar) se mece un poquito con la música.
   hoodie.rotation.x = sway * 0.08;

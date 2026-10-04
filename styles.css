@@ -1,8 +1,8 @@
 :root {
-  --plum: #1B1530;
-  --violet: #3A2F5B;
+  --plum: #0F1E1A;
+  --violet: #23392F;
   --amber: #FFB45C;
-  --teal: #6FD3D8;
+  --teal: #8FD6B8;
   --rose: #E86A92;
   --paper: #F2E6D8;
   --paper-dim: rgba(242, 230, 216, 0.74);
@@ -85,7 +85,7 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
   gap: 6px;
   padding: 6px;
   border-radius: 999px;
-  background: rgba(27, 21, 48, 0.72);
+  background: rgba(15, 30, 26, 0.72);
   border: 1px solid rgba(242, 230, 216, 0.14);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -132,7 +132,7 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
 .section:not(.hero) {
   width: min(56vw, 700px);
   padding-right: clamp(24px, 6vw, 96px);
-  background: linear-gradient(to right, rgba(27, 21, 48, 0.88) 55%, rgba(27, 21, 48, 0));
+  background: linear-gradient(to right, rgba(15, 30, 26, 0.88) 55%, rgba(15, 30, 26, 0));
 }
 .intro { margin-top: auto; }
 
@@ -270,12 +270,13 @@ body[data-mode="bachata"] .note--play { color: var(--rose); }
     justify-content: flex-end;
   }
   .section:not(.hero) {
-    background: linear-gradient(to top, rgba(27, 21, 48, 0.94) 55%, rgba(27, 21, 48, 0));
+    background: linear-gradient(to top, rgba(15, 30, 26, 0.94) 55%, rgba(15, 30, 26, 0));
   }
   .hero { justify-content: flex-end; }
   .intro { margin-top: 52vh; margin-top: 52svh; }
   .tagline { max-width: 30ch; }
   .player { margin-top: 28px; margin-bottom: 0; }
+  .note--play { display: none; } /* en móvil el botón ya se explica solo y la nota chocaba con el navbar */
 }
 
 @media (prefers-reduced-motion: reduce) {
