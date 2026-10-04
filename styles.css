@@ -114,7 +114,7 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
 
 /* ---------- Secciones ---------- */
 .page { position: relative; z-index: 1; pointer-events: none; }
-.page a, .page button, .spotify { pointer-events: auto; }
+.page a, .page button, .page input, .deck { pointer-events: auto; }
 
 .section {
   min-height: 100vh;
@@ -227,17 +227,60 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
   border: 0; background: var(--glow); box-shadow: 6px 0 0 var(--glow);
 }
 
-.spotify {
-  width: min(380px, calc(100vw - 48px));
-  border-radius: 12px;
-  overflow: hidden;
+/* ---------- Reproductor propio ---------- */
+.deck {
+  width: min(380px, calc(100vw - 44px));
+  padding: 16px 18px 14px;
+  border-radius: 18px;
+  background: rgba(15, 30, 26, 0.86);
+  border: 1px solid rgba(242, 230, 216, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
   transition: opacity .4s ease, transform .4s ease;
 }
-.spotify.is-on { opacity: 1; transform: none; pointer-events: auto; }
-.spotify iframe { display: block; border: 0; }
+.deck.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.deck__title { margin: 0; font-size: 20px; font-weight: 900; line-height: 1.2; }
+.deck__artist { margin: 2px 0 0; font-size: var(--fs-small); color: var(--paper-dim); }
+.deck__controls { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.deck__btn {
+  width: 34px; height: 34px; flex: none;
+  border: 0; border-radius: 50%;
+  background: rgba(242, 230, 216, 0.1);
+  cursor: pointer;
+  position: relative;
+}
+.deck__btn:hover { background: rgba(242, 230, 216, 0.2); }
+/* Íconos anterior / siguiente dibujados con CSS. */
+.deck__btn::before, .deck__btn::after {
+  content: ""; position: absolute; top: 11px;
+  border-style: solid; border-color: transparent;
+}
+.deck__btn--next::before { left: 12px; border-width: 6px 0 6px 8px; border-left-color: var(--paper); }
+.deck__btn--next::after { left: 21px; width: 2px; height: 12px; border: 0; background: var(--paper); }
+.deck__btn--prev::before { left: 14px; border-width: 6px 8px 6px 0; border-right-color: var(--paper); }
+.deck__btn--prev::after { left: 11px; width: 2px; height: 12px; border: 0; background: var(--paper); }
+.deck__seek { flex: 1; accent-color: var(--glow); height: 4px; cursor: pointer; }
+.deck__time { margin: 6px 0 0; font-size: 13px; color: var(--paper-dim); font-variant-numeric: tabular-nums; }
+.deck__list { margin: 12px 0 0; padding: 10px 0 0; list-style: none; border-top: 1px solid rgba(242, 230, 216, 0.12); }
+.deck__song {
+  width: 100%;
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 7px 10px;
+  border: 0; border-radius: 10px;
+  background: transparent;
+  color: var(--paper);
+  font: 500 15px "Zen Maru Gothic", system-ui, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+.deck__song:hover { background: rgba(242, 230, 216, 0.08); }
+.deck__song[aria-current="true"] { background: color-mix(in srgb, var(--glow) 22%, transparent); font-weight: 700; }
+.deck__song-artist { color: var(--paper-dim); font-size: 13px; }
+.deck__credit { margin: 8px 0 0; font-size: 12px; color: var(--paper-dim); }
+.deck__btn:focus-visible, .deck__song:focus-visible, .deck__seek:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
 /* Entrada del texto: un solo momento, cuando termina el loader. */
 .hero .intro, .hero .player { transition: opacity .9s ease .35s, transform .9s ease .35s; }
@@ -280,5 +323,5 @@ body[data-mode="bachata"] .note--play { color: var(--rose); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .name, .play, .spotify, .loader, .hero .intro, .hero .player { transition: none; }
+  .name, .play, .deck, .loader, .hero .intro, .hero .player { transition: none; }
 }

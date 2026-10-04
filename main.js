@@ -6,9 +6,9 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 // ============================================================
 // Avatar VRoid del dueño (.vrm). Vacío = silla vacía y la laptop teclea sola.
 const AVATAR_URL = "";
-// Spotify: Jr — La Estrella. Vacío = usa music/bachata.mp3 (libre de derechos).
-const SPOTIFY_TRACK_ID = "4d9fwUVP1SKEJubBUOeBKB";
-const BPM = 128;
+// Música: lista en music/playlist.json (mp3 libres de derechos servidos desde el VPS).
+const PLAYLIST_URL = "music/playlist.json";
+let BPM = 128; // cambia con cada canción (campo "bpm" de la playlist)
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const PALETTE = {
@@ -401,46 +401,94 @@ function poseAvatar(t, mode, beatLevel, sway) {
 }
 
 // ============================================================
-//  Música (Spotify o mp3) y botón Play
+//  Música: reproductor propio con playlist + botón Play
 // ============================================================
 const body = document.body;
 const playBtn = document.getElementById("play");
 const playLabel = playBtn.querySelector(".play__label");
-const spotifyBox = document.getElementById("spotify");
+const deck = document.getElementById("deck");
+const deckTitle = document.getElementById("deck-title");
+const deckArtist = document.getElementById("deck-artist");
+const deckList = document.getElementById("deck-list");
+const deckCredit = document.getElementById("deck-credit");
+const seek = document.getElementById("seek");
+const timeLabel = document.getElementById("deck-time");
 const music = document.getElementById("music");
-let spotify = null;
 
-if (SPOTIFY_TRACK_ID) {
-  window.onSpotifyIframeApiReady = (IFrameAPI) => {
-    IFrameAPI.createController(
-      document.getElementById("spotify-embed"),
-      { uri: `spotify:track:${SPOTIFY_TRACK_ID}`, width: "100%", height: 80 },
-      (controller) => { spotify = controller; }
-    );
-  };
-  const s = document.createElement("script");
-  s.src = "https://open.spotify.com/embed/iframe-api/v1";
-  s.async = true;
-  document.head.appendChild(s);
+let playlist = [];
+let current = 0;
+
+const fmt = (sec) => (Number.isFinite(sec) ? `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}` : "0:00");
+
+function renderDeck() {
+  const track = playlist[current];
+  if (!track) return;
+  deckTitle.textContent = track.title;
+  deckArtist.textContent = track.artist;
+  deckCredit.textContent = track.credit || "";
+  deckCredit.hidden = !track.credit;
+  [...deckList.children].forEach((li, i) => {
+    li.querySelector("button").setAttribute("aria-current", String(i === current));
+  });
 }
+
+function loadTrack(i, autoplay) {
+  if (!playlist.length) return;
+  current = (i + playlist.length) % playlist.length;
+  const track = playlist[current];
+  music.src = `music/${track.file}`;
+  BPM = track.bpm || 128;
+  renderDeck();
+  if (autoplay) music.play().catch(() => {});
+}
+
+fetch(PLAYLIST_URL)
+  .then((r) => (r.ok ? r.json() : []))
+  .then((list) => {
+    playlist = Array.isArray(list) ? list : [];
+    deckList.innerHTML = "";
+    playlist.forEach((track, i) => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "deck__song";
+      btn.innerHTML = `<span class="deck__song-title"></span><span class="deck__song-artist"></span>`;
+      btn.querySelector(".deck__song-title").textContent = track.title;
+      btn.querySelector(".deck__song-artist").textContent = track.artist;
+      btn.addEventListener("click", () => { if (mode !== "bachata") setMode(true); loadTrack(i, true); });
+      li.appendChild(btn);
+      deckList.appendChild(li);
+    });
+    if (playlist.length) loadTrack(0, false);
+  })
+  .catch(() => { playlist = []; });
+
+document.getElementById("prev").addEventListener("click", () => loadTrack(current - 1, mode === "bachata"));
+document.getElementById("next").addEventListener("click", () => loadTrack(current + 1, mode === "bachata"));
+music.addEventListener("ended", () => loadTrack(current + 1, true));
+music.addEventListener("timeupdate", () => {
+  if (!music.duration) return;
+  seek.value = String(Math.round((music.currentTime / music.duration) * 1000));
+  timeLabel.textContent = `${fmt(music.currentTime)} / ${fmt(music.duration)}`;
+});
+seek.addEventListener("input", () => {
+  if (music.duration) music.currentTime = (Number(seek.value) / 1000) * music.duration;
+});
 
 let mode = "lofi";
 let modeChangedAt = 0;
-playBtn.addEventListener("click", () => {
-  mode = mode === "lofi" ? "bachata" : "lofi";
+function setMode(on) {
+  mode = on ? "bachata" : "lofi";
   modeChangedAt = clock.elapsedTime;
-  const on = mode === "bachata";
   body.dataset.mode = mode;
   playBtn.setAttribute("aria-pressed", String(on));
   playLabel.textContent = on ? "Pause" : "Play bachata";
-  if (SPOTIFY_TRACK_ID) {
-    spotifyBox.classList.toggle("is-on", on);
-    spotifyBox.setAttribute("aria-hidden", String(!on));
-    if (spotify) on ? spotify.play() : spotify.pause();
-  } else {
-    on ? music.play().catch(() => {}) : music.pause();
-  }
-});
+  deck.classList.toggle("is-on", on);
+  deck.setAttribute("aria-hidden", String(!on));
+  if (on && playlist.length) music.play().catch(() => {});
+  else music.pause();
+}
+playBtn.addEventListener("click", () => setMode(mode !== "bachata"));
 
 // ============================================================
 //  Encuadre responsive: diorama a la derecha (escritorio) o arriba (móvil)

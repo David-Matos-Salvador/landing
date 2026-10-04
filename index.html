@@ -51,9 +51,20 @@
           <span class="play__icon" aria-hidden="true"></span>
           <span class="play__label">Play bachata</span>
         </button>
-        <p class="note note--play">press play, my favorite bachata is in here</p>
-        <div class="spotify" id="spotify" aria-hidden="true">
-          <div id="spotify-embed"></div>
+        <p class="note note--play">press play, I made a little bachata playlist</p>
+        <div class="deck" id="deck" aria-hidden="true">
+          <div class="deck__now">
+            <p class="deck__title" id="deck-title"></p>
+            <p class="deck__artist" id="deck-artist"></p>
+          </div>
+          <div class="deck__controls">
+            <button id="prev" class="deck__btn deck__btn--prev" type="button" aria-label="Previous song"></button>
+            <input id="seek" class="deck__seek" type="range" min="0" max="1000" value="0" aria-label="Song position">
+            <button id="next" class="deck__btn deck__btn--next" type="button" aria-label="Next song"></button>
+          </div>
+          <p class="deck__time" id="deck-time">0:00 / 0:00</p>
+          <ol class="deck__list" id="deck-list" aria-label="Playlist"></ol>
+          <p class="deck__credit" id="deck-credit" hidden></p>
         </div>
       </div>
     </section>
@@ -92,7 +103,7 @@
     </section>
   </main>
 
-  <audio id="music" src="music/bachata.mp3" preload="none" loop></audio>
+  <audio id="music" preload="metadata"></audio>
   <noscript><p class="noscript">Turn on JavaScript to see the room.</p></noscript>
   <script type="module" src="main.js"></script>
 </body>
