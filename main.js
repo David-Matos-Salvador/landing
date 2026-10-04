@@ -270,7 +270,8 @@ scene.add(partyLight);
 
 const MODES = {
   lofi: { hemiSky: new THREE.Color("#A9CBBB"), window: new THREE.Color("#C4E5D6"), screen: PALETTE.teal, party: 0, rain: PALETTE.teal },
-  bachata: { hemiSky: new THREE.Color("#C05C9A"), window: PALETTE.rose, screen: PALETTE.rose, party: 7, rain: PALETTE.rose },
+  // Bachata: el cuarto se queda verde; solo cambian la pantalla, la lluvia y una luz rosa que late.
+  bachata: { hemiSky: new THREE.Color("#A9CBBB"), window: new THREE.Color("#C4E5D6"), screen: PALETTE.rose, party: 9, rain: PALETTE.rose },
 };
 
 // ============================================================
@@ -550,8 +551,8 @@ function animate() {
   windowLight.color.copy(MODES.lofi.window).lerp(MODES.bachata.window, mix);
   screenLight.color.copy(MODES.lofi.screen).lerp(MODES.bachata.screen, mix);
   rainUniforms.uTint.value.copy(MODES.lofi.rain).lerp(MODES.bachata.rain, mix);
-  partyLight.intensity = mix * (MODES.bachata.party * (0.55 + beatLevel * 0.6));
-  scene.background.copy(PALETTE.plum).lerp(tmpColor.set("#2A1424"), mix * 0.8);
+  partyLight.intensity = mix * MODES.bachata.party * (0.12 + beatLevel * 0.95); // late con el 1-2-3-tap
+  scene.background.copy(PALETTE.plum);
   lampLight.intensity = 14 * (1 - mix * 0.35) + Math.sin(t * 13) * 0.1;
 
   rainUniforms.uTime.value = t * 0.35 * motion;
