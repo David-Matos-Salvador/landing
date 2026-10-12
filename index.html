@@ -40,33 +40,19 @@
     </ul>
   </nav>
 
+  <!-- Disco flotante: clic = canción al azar / pausa. Sin información de la canción. -->
+  <button id="play" class="disc" type="button" aria-pressed="false" aria-label="Play a random song">
+    <span class="disc__vinyl" aria-hidden="true">
+      <span class="disc__label"></span>
+    </span>
+  </button>
+
   <main class="page">
     <section id="room" class="section hero" data-section="room">
       <header class="intro">
         <h1 class="name">David<br>Matos</h1>
         <p class="tagline">I build things for the web, and the server they run on.</p>
       </header>
-      <div class="player">
-        <button id="play" class="play" type="button" aria-pressed="false">
-          <span class="play__icon" aria-hidden="true"></span>
-          <span class="play__label">Play bachata</span>
-        </button>
-        <p class="note note--play">press play, I made a little bachata playlist</p>
-        <div class="deck" id="deck" aria-hidden="true">
-          <div class="deck__now">
-            <p class="deck__title" id="deck-title"></p>
-            <p class="deck__artist" id="deck-artist"></p>
-          </div>
-          <div class="deck__controls">
-            <button id="prev" class="deck__btn deck__btn--prev" type="button" aria-label="Previous song"></button>
-            <input id="seek" class="deck__seek" type="range" min="0" max="1000" value="0" aria-label="Song position">
-            <button id="next" class="deck__btn deck__btn--next" type="button" aria-label="Next song"></button>
-          </div>
-          <p class="deck__time" id="deck-time">0:00 / 0:00</p>
-          <ol class="deck__list" id="deck-list" aria-label="Playlist"></ol>
-          <p class="deck__credit" id="deck-credit" hidden></p>
-        </div>
-      </div>
     </section>
 
     <section id="about" class="section" data-section="about">

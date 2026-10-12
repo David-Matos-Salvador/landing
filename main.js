@@ -402,78 +402,40 @@ function poseAvatar(t, mode, beatLevel, sway) {
 }
 
 // ============================================================
-//  Música: reproductor propio con playlist + botón Play
+//  Música: disco flotante (canción al azar / pausa), sin panel de información
 // ============================================================
 const body = document.body;
 const playBtn = document.getElementById("play");
-const playLabel = playBtn.querySelector(".play__label");
-const deck = document.getElementById("deck");
-const deckTitle = document.getElementById("deck-title");
-const deckArtist = document.getElementById("deck-artist");
-const deckList = document.getElementById("deck-list");
-const deckCredit = document.getElementById("deck-credit");
-const seek = document.getElementById("seek");
-const timeLabel = document.getElementById("deck-time");
 const music = document.getElementById("music");
 
 let playlist = [];
-let current = 0;
+let current = -1;
 
-const fmt = (sec) => (Number.isFinite(sec) ? `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}` : "0:00");
-
-function renderDeck() {
-  const track = playlist[current];
-  if (!track) return;
-  deckTitle.textContent = track.title;
-  deckArtist.textContent = track.artist;
-  deckCredit.textContent = track.credit || "";
-  deckCredit.hidden = !track.credit;
-  [...deckList.children].forEach((li, i) => {
-    li.querySelector("button").setAttribute("aria-current", String(i === current));
-  });
-}
-
-function loadTrack(i, autoplay) {
+function loadTrack(i) {
   if (!playlist.length) return;
   current = (i + playlist.length) % playlist.length;
   const track = playlist[current];
   music.src = `music/${track.file}`;
   BPM = track.bpm || 128;
-  renderDeck();
-  if (autoplay) music.play().catch(() => {});
+}
+
+// Elige una canción al azar, distinta de la actual si hay más de una.
+function randomTrack() {
+  if (playlist.length < 2) return 0;
+  let i = current;
+  while (i === current) i = Math.floor(Math.random() * playlist.length);
+  return i;
 }
 
 fetch(PLAYLIST_URL)
   .then((r) => (r.ok ? r.json() : []))
-  .then((list) => {
-    playlist = Array.isArray(list) ? list : [];
-    deckList.innerHTML = "";
-    playlist.forEach((track, i) => {
-      const li = document.createElement("li");
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "deck__song";
-      btn.innerHTML = `<span class="deck__song-title"></span><span class="deck__song-artist"></span>`;
-      btn.querySelector(".deck__song-title").textContent = track.title;
-      btn.querySelector(".deck__song-artist").textContent = track.artist;
-      btn.addEventListener("click", () => { if (mode !== "bachata") setMode(true); loadTrack(i, true); });
-      li.appendChild(btn);
-      deckList.appendChild(li);
-    });
-    if (playlist.length) loadTrack(0, false);
-  })
+  .then((list) => { playlist = Array.isArray(list) ? list : []; })
   .catch(() => { playlist = []; });
 
-document.getElementById("prev").addEventListener("click", () => loadTrack(current - 1, mode === "bachata"));
-document.getElementById("next").addEventListener("click", () => loadTrack(current + 1, mode === "bachata"));
-music.addEventListener("ended", () => loadTrack(current + 1, true));
-music.addEventListener("timeupdate", () => {
-  if (!music.duration) return;
-  seek.value = String(Math.round((music.currentTime / music.duration) * 1000));
-  timeLabel.textContent = `${fmt(music.currentTime)} / ${fmt(music.duration)}`;
-});
-seek.addEventListener("input", () => {
-  if (music.duration) music.currentTime = (Number(seek.value) / 1000) * music.duration;
+// Al terminar una canción sigue otra al azar.
+music.addEventListener("ended", () => {
+  loadTrack(randomTrack());
+  music.play().catch(() => {});
 });
 
 let mode = "lofi";
@@ -483,13 +445,15 @@ function setMode(on) {
   modeChangedAt = clock.elapsedTime;
   body.dataset.mode = mode;
   playBtn.setAttribute("aria-pressed", String(on));
-  playLabel.textContent = on ? "Pause" : "Play bachata";
-  deck.classList.toggle("is-on", on);
-  deck.setAttribute("aria-hidden", String(!on));
+  playBtn.setAttribute("aria-label", on ? "Pause the music" : "Play a random song");
   if (on && playlist.length) music.play().catch(() => {});
   else music.pause();
 }
-playBtn.addEventListener("click", () => setMode(mode !== "bachata"));
+playBtn.addEventListener("click", () => {
+  const turnOn = mode !== "bachata";
+  if (turnOn && playlist.length) loadTrack(randomTrack());
+  setMode(turnOn);
+});
 
 // ============================================================
 //  Encuadre responsive: diorama a la derecha (escritorio) o arriba (móvil)

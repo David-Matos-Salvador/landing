@@ -114,7 +114,7 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
 
 /* ---------- Secciones ---------- */
 .page { position: relative; z-index: 1; pointer-events: none; }
-.page a, .page button, .page input, .deck { pointer-events: auto; }
+.page a, .page button { pointer-events: auto; }
 
 .section {
   min-height: 100vh;
@@ -126,7 +126,7 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
   justify-content: center;
 }
 
-.hero { justify-content: space-between; padding-top: 0; }
+.hero { justify-content: center; }
 
 /* Velo suave detrás del texto en las secciones donde la cámara está cerca de los objetos. */
 .section:not(.hero) {
@@ -134,7 +134,6 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
   padding-right: clamp(24px, 6vw, 96px);
   background: linear-gradient(to right, rgba(15, 30, 26, 0.88) 55%, rgba(15, 30, 26, 0));
 }
-.intro { margin-top: auto; }
 
 /* El nombre toma la luz de la escena: ámbar con la lámpara, rosa con la bachata. */
 .name {
@@ -188,103 +187,75 @@ body:not(.is-loading) .loader { opacity: 0; visibility: hidden; }
 }
 .links a:hover { border-color: var(--glow); }
 
-/* ---------- Player ---------- */
-.player {
-  margin-top: clamp(32px, 7vh, 88px);
-  margin-bottom: clamp(28px, 6vh, 64px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
-}
-.play {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 24px 14px 18px;
+/* Botón Play = un vinilo. Gira mientras suena; clic = canción al azar / pausa. */
+.disc {
+  position: fixed;
+  right: clamp(18px, 3vw, 40px);
+  bottom: clamp(18px, 3vw, 40px);
+  z-index: 6;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+.disc__vinyl {
+  --size: clamp(72px, 7vw, 96px);
+  width: var(--size);
+  height: var(--size);
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  /* Surcos: anillos finos sobre negro; un brillo cónico da la sensación de vinilo. */
+  background:
+    conic-gradient(from 20deg, rgba(255,255,255,0) 0 12%, rgba(255,255,255,0.14) 18%, rgba(255,255,255,0) 26% 62%, rgba(255,255,255,0.1) 68%, rgba(255,255,255,0) 76%),
+    repeating-radial-gradient(circle, #0a0f0d 0 2px, #17201c 2px 3px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(242, 230, 216, 0.08);
+  animation: spin 2.4s linear infinite;
+  animation-play-state: paused;
+  transition: box-shadow .8s ease, transform .2s ease;
+}
+.disc:hover .disc__vinyl { transform: scale(1.04); }
+.disc[aria-pressed="true"] .disc__vinyl {
+  animation-play-state: running;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5), 0 0 28px color-mix(in srgb, var(--glow) 55%, transparent);
+}
+/* Etiqueta central con el ícono play / pausa. */
+.disc__label {
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
   background: var(--glow);
-  color: var(--plum);
-  font: 700 17px "Zen Maru Gothic", system-ui, sans-serif;
-  cursor: pointer;
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--glow) 35%, transparent);
-  transition: background-color .8s ease, box-shadow .8s ease, transform .15s ease;
-}
-.play:hover { transform: translateY(-2px); }
-.play:active { transform: translateY(0); }
-.play:focus-visible, .page a:focus-visible, .nav a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
-.play__icon { width: 26px; height: 26px; border-radius: 50%; background: var(--plum); position: relative; flex: none; }
-.play__icon::before {
-  content: "";
-  position: absolute; left: 10px; top: 7px;
-  border-style: solid;
-  border-width: 6px 0 6px 9px;
-  border-color: transparent transparent transparent var(--glow);
-}
-.play[aria-pressed="true"] .play__icon::before {
-  left: 8px; top: 8px; width: 3px; height: 10px;
-  border: 0; background: var(--glow); box-shadow: 6px 0 0 var(--glow);
-}
-
-/* ---------- Reproductor propio ---------- */
-.deck {
-  width: min(380px, calc(100vw - 44px));
-  padding: 16px 18px 14px;
-  border-radius: 18px;
-  background: rgba(15, 30, 26, 0.86);
-  border: 1px solid rgba(242, 230, 216, 0.14);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition: opacity .4s ease, transform .4s ease;
-}
-.deck.is-on { opacity: 1; transform: none; pointer-events: auto; }
-.deck__title { margin: 0; font-size: 20px; font-weight: 900; line-height: 1.2; }
-.deck__artist { margin: 2px 0 0; font-size: var(--fs-small); color: var(--paper-dim); }
-.deck__controls { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
-.deck__btn {
-  width: 34px; height: 34px; flex: none;
-  border: 0; border-radius: 50%;
-  background: rgba(242, 230, 216, 0.1);
-  cursor: pointer;
   position: relative;
+  transition: background-color .8s ease;
 }
-.deck__btn:hover { background: rgba(242, 230, 216, 0.2); }
-/* Íconos anterior / siguiente dibujados con CSS. */
-.deck__btn::before, .deck__btn::after {
-  content: ""; position: absolute; top: 11px;
-  border-style: solid; border-color: transparent;
+.disc__label::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-35%, -50%);
+  border-style: solid;
+  border-width: 7px 0 7px 11px;
+  border-color: transparent transparent transparent var(--plum);
 }
-.deck__btn--next::before { left: 12px; border-width: 6px 0 6px 8px; border-left-color: var(--paper); }
-.deck__btn--next::after { left: 21px; width: 2px; height: 12px; border: 0; background: var(--paper); }
-.deck__btn--prev::before { left: 14px; border-width: 6px 8px 6px 0; border-right-color: var(--paper); }
-.deck__btn--prev::after { left: 11px; width: 2px; height: 12px; border: 0; background: var(--paper); }
-.deck__seek { flex: 1; accent-color: var(--glow); height: 4px; cursor: pointer; }
-.deck__time { margin: 6px 0 0; font-size: 13px; color: var(--paper-dim); font-variant-numeric: tabular-nums; }
-.deck__list { margin: 12px 0 0; padding: 10px 0 0; list-style: none; border-top: 1px solid rgba(242, 230, 216, 0.12); }
-.deck__song {
-  width: 100%;
-  display: flex; justify-content: space-between; gap: 12px;
-  padding: 7px 10px;
-  border: 0; border-radius: 10px;
-  background: transparent;
-  color: var(--paper);
-  font: 500 15px "Zen Maru Gothic", system-ui, sans-serif;
-  text-align: left;
-  cursor: pointer;
+.disc[aria-pressed="true"] .disc__label::before {
+  transform: translate(-50%, -50%);
+  width: 4px; height: 13px;
+  border: 0;
+  background: var(--plum);
+  box-shadow: 7px 0 0 var(--plum);
+  margin-left: -3.5px;
 }
-.deck__song:hover { background: rgba(242, 230, 216, 0.08); }
-.deck__song[aria-current="true"] { background: color-mix(in srgb, var(--glow) 22%, transparent); font-weight: 700; }
-.deck__song-artist { color: var(--paper-dim); font-size: 13px; }
-.deck__credit { margin: 8px 0 0; font-size: 12px; color: var(--paper-dim); }
-.deck__btn:focus-visible, .deck__song:focus-visible, .deck__seek:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.disc:focus-visible { outline: 3px solid var(--teal); outline-offset: 6px; }
+.page a:focus-visible, .nav a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Entrada del texto: un solo momento, cuando termina el loader. */
-.hero .intro, .hero .player { transition: opacity .9s ease .35s, transform .9s ease .35s; }
-body.is-loading .hero .intro, body.is-loading .hero .player { opacity: 0; transform: translateY(24px); }
+.hero .intro { transition: opacity .9s ease .35s, transform .9s ease .35s; }
+.disc { transition: opacity .9s ease .6s; }
+body.is-loading .disc { opacity: 0; pointer-events: none; }
+body.is-loading .hero .intro { opacity: 0; transform: translateY(24px); }
 
 /* Notas a mano (Klee One): pocas y pequeñas, como comentarios escritos sobre la página. */
 .note {
@@ -297,9 +268,7 @@ body.is-loading .hero .intro, body.is-loading .hero .player { opacity: 0; transf
   transform: rotate(-2deg);
   transform-origin: left center;
 }
-.note--play { margin: 0 0 0 6px; max-width: 26ch; }
-body[data-mode="bachata"] .note--play { color: var(--rose); }
-
+body[data-mode="bachata"] 
 .noscript { position: fixed; left: 24px; bottom: 24px; color: var(--paper-dim); }
 
 /* ---------- Móvil ---------- */
@@ -318,10 +287,10 @@ body[data-mode="bachata"] .note--play { color: var(--rose); }
   .hero { justify-content: flex-end; }
   .intro { margin-top: 52vh; margin-top: 52svh; }
   .tagline { max-width: 30ch; }
-  .player { margin-top: 28px; margin-bottom: 0; }
-  .note--play { display: none; } /* en móvil el botón ya se explica solo y la nota chocaba con el navbar */
+  .disc { top: 16px; bottom: auto; right: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .name, .play, .deck, .loader, .hero .intro, .hero .player { transition: none; }
+  .disc__vinyl { animation: none; }
+  .name, .disc, .disc__vinyl, .loader, .hero .intro { transition: none; }
 }
