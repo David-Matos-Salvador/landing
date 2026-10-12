@@ -68,6 +68,29 @@ html, body {
   gap: 14px;
 }
 
+/* Grupo de enlaces privados: título pequeño con candado y botones más discretos. */
+.tree__group {
+  margin: 34px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--paper-dim);
+}
+.tree__group::before {
+  content: "";
+  width: 12px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--paper-dim);
+  box-shadow: 0 -7px 0 -3px var(--night), 0 -7px 0 -1px var(--paper-dim); /* arco del candado */
+}
+.tree__links--private { margin-top: 14px; }
+.tree__links--private .tree__link { background: transparent; border-style: dashed; }
+.tree__links--private .tree__link:hover { background: var(--wall); }
+
 .tree__link {
   display: grid;
   gap: 2px;
