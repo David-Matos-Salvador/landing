@@ -4,6 +4,7 @@ FROM nginx:1.29-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY index.html styles.css main.js /usr/share/nginx/html/
 COPY music/ /usr/share/nginx/html/music/
+COPY links/ /usr/share/nginx/html/links/
 
 EXPOSE 80
 

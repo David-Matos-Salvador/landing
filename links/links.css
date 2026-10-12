@@ -1,0 +1,102 @@
+/* Linktree clásico (avatar, nombre, bio y botones apilados) con la paleta del cuarto. */
+:root {
+  --night: #0F1E1A;
+  --wall: #23392F;
+  --amber: #FFB45C;
+  --mint: #8FD6B8;
+  --paper: #F2E6D8;
+  --paper-dim: rgba(242, 230, 216, 0.74);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(60vw 50vh at 50% -10%, rgba(255, 180, 92, 0.16), transparent 70%),
+    var(--night);
+  color: var(--paper);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+}
+
+.tree {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding: clamp(40px, 9vh, 96px) 22px 64px;
+  text-align: center;
+}
+
+/* Avatar con las iniciales, iluminado como por la lámpara del cuarto. */
+.tree__avatar {
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--amber);
+  color: var(--night);
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  box-shadow: 0 0 0 6px rgba(255, 180, 92, 0.16), 0 18px 48px rgba(255, 180, 92, 0.28);
+}
+
+.tree__name {
+  margin: 0;
+  font-size: clamp(34px, 9vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.tree__bio {
+  margin: 12px auto 0;
+  max-width: 30ch;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--paper-dim);
+}
+
+.tree__links {
+  margin: 34px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.tree__link {
+  display: grid;
+  gap: 2px;
+  padding: 18px 22px;
+  border-radius: 20px;
+  background: var(--wall);
+  border: 1px solid rgba(242, 230, 216, 0.12);
+  color: var(--paper);
+  text-decoration: none;
+  transition: transform .15s ease, background-color .2s ease, border-color .2s ease;
+}
+.tree__link:hover {
+  transform: translateY(-2px);
+  background: #2B4639;
+  border-color: var(--amber);
+}
+.tree__link:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+.tree__title { font-size: 19px; font-weight: 900; }
+.tree__desc { font-size: 14.5px; color: var(--paper-dim); }
+
+.tree__note {
+  margin: 30px 0 0;
+  font-family: "Klee One", "Zen Maru Gothic", cursive;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--mint);
+  transform: rotate(-2deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tree__link { transition: none; }
+}
