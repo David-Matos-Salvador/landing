@@ -1,23 +1,17 @@
-/* Linktree clásico (avatar, nombre, bio y botones apilados) con la paleta del cuarto. */
-:root {
-  --night: #0F1E1A;
-  --wall: #23392F;
-  --amber: #FFB45C;
-  --mint: #8FD6B8;
-  --paper: #F2E6D8;
-  --paper-dim: rgba(242, 230, 216, 0.74);
+/* Linktree clásico (avatar, nombre, bio y botones apilados). Colores y fuentes: /styles/tokens.css. */
+
+* {
+  box-sizing: border-box;
 }
 
-* { box-sizing: border-box; }
-
-html, body {
+html,
+body {
   margin: 0;
   min-height: 100%;
   background:
-    radial-gradient(60vw 50vh at 50% -10%, rgba(255, 180, 92, 0.16), transparent 70%),
-    var(--night);
-  color: var(--paper);
-  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    radial-gradient(60vw 50vh at 50% -10%, rgba(255, 180, 92, 0.16), transparent 70%), var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
 }
 
 .tree {
@@ -35,12 +29,14 @@ html, body {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--amber);
-  color: var(--night);
+  background: var(--color-amber);
+  color: var(--color-bg);
   font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.04em;
-  box-shadow: 0 0 0 6px rgba(255, 180, 92, 0.16), 0 18px 48px rgba(255, 180, 92, 0.28);
+  box-shadow:
+    0 0 0 6px rgba(255, 180, 92, 0.16),
+    0 18px 48px rgba(255, 180, 92, 0.28);
 }
 
 .tree__name {
@@ -57,7 +53,7 @@ html, body {
   font-size: 17px;
   font-weight: 500;
   line-height: 1.5;
-  color: var(--paper-dim);
+  color: var(--color-text-dim);
 }
 
 .tree__links {
@@ -77,49 +73,72 @@ html, body {
   gap: 8px;
   font-size: 15px;
   font-weight: 700;
-  color: var(--paper-dim);
+  color: var(--color-text-dim);
 }
 .tree__group::before {
   content: "";
   width: 12px;
   height: 10px;
   border-radius: 2px;
-  background: var(--paper-dim);
-  box-shadow: 0 -7px 0 -3px var(--night), 0 -7px 0 -1px var(--paper-dim); /* arco del candado */
+  background: var(--color-text-dim);
+  box-shadow:
+    0 -7px 0 -3px var(--color-bg),
+    0 -7px 0 -1px var(--color-text-dim); /* arco del candado */
 }
-.tree__links--private { margin-top: 14px; }
-.tree__links--private .tree__link { background: transparent; border-style: dashed; }
-.tree__links--private .tree__link:hover { background: var(--wall); }
+.tree__links--private {
+  margin-top: 14px;
+}
+.tree__links--private .tree__link {
+  background: transparent;
+  border-style: dashed;
+}
+.tree__links--private .tree__link:hover {
+  background: var(--color-surface);
+}
 
 .tree__link {
   display: grid;
   gap: 2px;
   padding: 18px 22px;
   border-radius: 20px;
-  background: var(--wall);
-  border: 1px solid rgba(242, 230, 216, 0.12);
-  color: var(--paper);
+  background: var(--color-surface);
+  border: 1px solid rgb(var(--text-rgb) / 0.12);
+  color: var(--color-text);
   text-decoration: none;
-  transition: transform .15s ease, background-color .2s ease, border-color .2s ease;
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 .tree__link:hover {
   transform: translateY(-2px);
-  background: #2B4639;
-  border-color: var(--amber);
+  background: #2b4639;
+  border-color: var(--color-amber);
 }
-.tree__link:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
-.tree__title { font-size: 19px; font-weight: 700; }
-.tree__desc { font-size: 14.5px; color: var(--paper-dim); }
+.tree__link:focus-visible {
+  outline: 3px solid var(--color-mint);
+  outline-offset: 3px;
+}
+.tree__title {
+  font-size: 19px;
+  font-weight: 700;
+}
+.tree__desc {
+  font-size: 14.5px;
+  color: var(--color-text-dim);
+}
 
 .tree__note {
   margin: 30px 0 0;
-  font-family: "M PLUS 1 Code", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--mint);
+  color: var(--color-mint);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tree__link { transition: none; }
+  .tree__link {
+    transition: none;
+  }
 }

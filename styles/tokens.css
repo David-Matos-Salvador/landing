@@ -1,0 +1,33 @@
+/* Tokens de diseño: colores, tipografía y tamaños. Todo el CSS usa estas variables. */
+
+:root {
+  /* Colores "night forest". Los dos primeros también como números sueltos (R G B), para
+     poder usarlos con transparencia: rgb(var(--bg-rgb) / 0.5). */
+  --bg-rgb: 15 30 26;
+  --text-rgb: 242 230 216;
+  --color-bg: #0f1e1a;
+  --color-surface: #23392f;
+  --color-amber: #ffb45c;
+  --color-mint: #8fd6b8;
+  --color-rose: #e86a92;
+  --color-text: #f2e6d8;
+  --color-text-dim: rgb(var(--text-rgb) / 0.74);
+  /* Color de acento: toma la luz de la escena (ver body[data-mode] más abajo). */
+  --color-glow: var(--color-amber);
+
+  /* Escala tipográfica con saltos grandes: el contraste de tamaños es parte del diseño. */
+  --fs-mega: clamp(120px, 22vw, 240px); /* número del loader */
+  --fs-display: clamp(64px, 11vw, 152px); /* nombre */
+  --fs-title: clamp(44px, 6.4vw, 88px); /* títulos de sección */
+  --fs-lead: clamp(19px, 1.9vw, 26px); /* tagline */
+  --fs-body: 18px;
+  --fs-small: 15px;
+
+  --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: "M PLUS 1 Code", ui-monospace, monospace;
+}
+
+/* Con música, el acento pasa de ámbar (lámpara) a rosa (fiesta). */
+body[data-mode="bachata"] {
+  --color-glow: var(--color-rose);
+}

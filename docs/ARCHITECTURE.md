@@ -1,0 +1,117 @@
+# Arquitectura
+
+Guía para leer el código. La idea central: **cada archivo hace una sola cosa**, y
+`src/main.js` es el único lugar donde las piezas se conocen entre sí.
+
+## Mapa de carpetas
+
+```
+index.html              La página: contenido de las secciones y qué CSS/JS se carga
+links/                  El linktree (otra página, mismo sistema de colores)
+music/                  Canciones y playlist.json
+styles/                 Un archivo CSS por componente
+  tokens.css            Variables: colores, fuentes, tamaños  ← empieza por aquí
+  base.css              Reset, lienzo 3D de fondo, accesibilidad global
+  loader.css  nav.css  sections.css  components.css  disc.css
+src/
+  main.js               Punto de entrada: crea todo y corre el loop  ← empieza por aquí
+  config.js             Valores que uno querría cambiar (URLs, tempo, paleta)
+  lib/                  Utilidades sin estado
+    env.js              ¿Pantalla chica? ¿Menos animaciones?
+    math.js             smoothstep, approach
+  scene/                Todo lo 3D
+    stage.js            Renderer, escena, cámara y resize
+    layout.js           Medidas y colores del cuarto (dónde está cada cosa)
+    primitives.js       block() y matte(): las piezas con que se arma todo
+    room.js             Arma el cuarto con los objetos de objects/
+    objects/            Un archivo por objeto: window, desk, laptop, lamp, chair...
+    lights.js           Luces generales (ambiente, luna, fiesta)
+    rhythm.js           Convierte el tempo en números (mix, beatLevel, sway)
+    mood.js             Aplica esos números a los colores de las luces
+    cameraRig.js        Cámara: una toma por sección + parallax
+    avatar.js           Avatar VRM opcional
+  ui/                   Lo que no es 3D
+    loader.js           Pantalla de carga
+    nav.js              Resalta la sección actual en el navbar
+    player.js           Disco de música y modo lofi / bachata
+```
+
+## Cómo fluyen los datos
+
+En cada frame (60 veces por segundo), `animate()` en `main.js` hace esto, en orden:
+
+```
+player  ──►  mode, bpm          ¿hay música? ¿a qué tempo?
+                │
+rhythm.update() ──►  { mix, beatLevel, sway }     tres números, nada más
+                │
+        ┌───────┼──────────┬──────────┬───────────┐
+     applyMood  room    laptop      lamp      cameraRig      cada pieza los usa
+        └───────┴──────────┴──────────┴───────────┘
+                │
+        renderer.render()        se dibuja el frame
+```
+
+Los datos van **en una sola dirección**: de arriba hacia abajo. Ninguna pieza de abajo
+modifica a otra; solo reciben números y se actualizan a sí mismas. Por eso se puede leer
+(o cambiar) un archivo sin tener los demás en la cabeza.
+
+## Los tres patrones que se repiten
+
+**1. Funciones fábrica.** Casi todos los módulos exportan una función `createX()` o
+`addX()` que arma algo y devuelve un objeto pequeño con lo único que se puede usar desde
+afuera, normalmente un `update()`:
+
+```js
+const lamp = addLamp(room, { shadowMapSize: 1024 });
+lamp.update({ dt, t, mix, isOn });
+```
+
+Lo que está dentro de la función (por ejemplo `power` en `lamp.js`) es privado: nadie más
+puede tocarlo. Es encapsulación sin clases.
+
+**2. Un solo dueño por dato.** El modo (`lofi` / `bachata`) vive solo en `player.js`; el
+ritmo, solo en `rhythm.js`; si el loader terminó, solo en `loader.js`. Los demás lo leen,
+nunca lo escriben. Cuando algo se ve mal, hay un solo lugar donde buscar.
+
+**3. Configuración separada del comportamiento.** Los números que describen _qué_ hay
+(medidas en `layout.js`, tomas de cámara en `cameraRig.js`, ajustes en `config.js`) están
+arriba y con nombre; el código que dice _cómo_ se mueve va debajo.
+
+## Recetas
+
+| Quiero...                          | Toco...                                                                     |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| Cambiar un color de toda la página | `styles/tokens.css` (y `PALETTE` en `src/config.js` para el 3D)             |
+| Mover un mueble                    | `src/scene/layout.js`                                                       |
+| Agregar un objeto al cuarto        | Archivo nuevo en `src/scene/objects/` + una línea en `room.js`              |
+| Agregar una sección                | `<section id="x">` y un enlace en `index.html` + una toma en `cameraRig.js` |
+| Cambiar el encuadre de una sección | La toma con ese `id` en `cameraRig.js`                                      |
+| Cambiar lo que escribe la laptop   | `CODE` en `src/scene/objects/laptopScreen.js`                               |
+| Agregar una canción                | `music/README.md`                                                           |
+| Poner mi avatar                    | `AVATAR_URL` en `src/config.js`                                             |
+
+## Decisiones (y por qué)
+
+- **Sin paso de build.** El navegador carga los archivos de `src/` tal cual, con módulos
+  ES nativos y un import map para Three.js. Lo que lees es lo que se ejecuta: no hay
+  bundler ni transpilador que entender primero. El costo: el navegador pide ~25 archivos
+  pequeños en vez de uno. Para una página personal está bien; si un día pesa, se agrega
+  Vite sin cambiar la estructura.
+- **JavaScript con JSDoc, no TypeScript.** Los comentarios `@param` documentan los tipos y
+  el editor los usa para autocompletar, sin necesitar compilación.
+- **CSS por componente con tokens.** Los colores tienen nombre por función
+  (`--color-glow`), no por tono; así cambiar la paleta es editar un archivo.
+- **Accesibilidad.** Se respeta `prefers-reduced-motion` (en `lib/env.js` y en el CSS), el
+  navbar usa `aria-current` y el disco `aria-pressed`.
+
+## Calidad
+
+```bash
+npm install        # una vez
+npm run dev        # servidor local en http://localhost:5173
+npm run check      # ESLint (errores) + Prettier (formato)
+npm run format     # corrige el formato
+```
+
+GitHub Actions corre `npm run check` en cada push (`.github/workflows/check.yml`).

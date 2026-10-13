@@ -1,0 +1,114 @@
+/* Disco flotante: el botón de música. Gira mientras suena. */
+
+/* Botón Play = un vinilo. Gira mientras suena; clic = canción al azar / pausa. */
+.disc {
+  position: fixed;
+  right: clamp(18px, 3vw, 40px);
+  bottom: clamp(18px, 3vw, 40px);
+  z-index: 6;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.disc__vinyl {
+  --size: clamp(72px, 7vw, 96px);
+  width: var(--size);
+  height: var(--size);
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  /* Surcos: anillos finos sobre negro; un brillo cónico da la sensación de vinilo. */
+  background:
+    conic-gradient(
+      from 20deg,
+      rgba(255, 255, 255, 0) 0 12%,
+      rgba(255, 255, 255, 0.14) 18%,
+      rgba(255, 255, 255, 0) 26% 62%,
+      rgba(255, 255, 255, 0.1) 68%,
+      rgba(255, 255, 255, 0) 76%
+    ),
+    repeating-radial-gradient(circle, #0a0f0d 0 2px, #17201c 2px 3px);
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgb(var(--text-rgb) / 0.08);
+  animation: spin 2.4s linear infinite;
+  animation-play-state: paused;
+  transition:
+    box-shadow 0.8s ease,
+    transform 0.2s ease;
+}
+
+.disc:hover .disc__vinyl {
+  transform: scale(1.04);
+}
+
+.disc[aria-pressed="true"] .disc__vinyl {
+  animation-play-state: running;
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.5),
+    0 0 28px color-mix(in srgb, var(--color-glow) 55%, transparent);
+}
+
+/* Etiqueta central con el ícono play / pausa. */
+.disc__label {
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
+  background: var(--color-glow);
+  position: relative;
+  transition: background-color 0.8s ease;
+}
+
+.disc__label::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-35%, -50%);
+  border-style: solid;
+  border-width: 7px 0 7px 11px;
+  border-color: transparent transparent transparent var(--color-bg);
+}
+
+.disc[aria-pressed="true"] .disc__label::before {
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 13px;
+  border: 0;
+  background: var(--color-bg);
+  box-shadow: 7px 0 0 var(--color-bg);
+  margin-left: -3.5px;
+}
+
+.disc:focus-visible {
+  outline: 3px solid var(--color-mint);
+  outline-offset: 6px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.disc {
+  transition: opacity 0.9s ease 0.6s;
+}
+
+body.is-loading .disc {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 760px) {
+  .disc {
+    top: 16px;
+    bottom: auto;
+    right: 16px;
+  }
+}

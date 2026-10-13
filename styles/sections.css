@@ -1,0 +1,122 @@
+/* Secciones de la página: la columna de texto sobre la escena y su tipografía. */
+
+.page {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.page a,
+.page button {
+  pointer-events: auto;
+}
+
+.section {
+  min-height: 100vh;
+  min-height: 100svh;
+  width: min(48vw, 600px);
+  padding: 120px 0 72px clamp(24px, 6vw, 96px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero {
+  justify-content: center;
+}
+
+/* Velo suave detrás del texto en las secciones donde la cámara está cerca de los objetos. */
+.section:not(.hero) {
+  width: min(56vw, 700px);
+  padding-right: clamp(24px, 6vw, 96px);
+  background: linear-gradient(to right, rgb(var(--bg-rgb) / 0.88) 55%, rgb(var(--bg-rgb) / 0));
+}
+
+/* El nombre toma la luz de la escena: ámbar con la lámpara, rosa con la bachata. */
+.name {
+  margin: 0;
+  font-size: var(--fs-display);
+  font-weight: 800;
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  text-shadow: 0 0 0.5em color-mix(in srgb, var(--color-glow) 40%, transparent);
+  transition: text-shadow 1.2s ease;
+}
+
+.tagline {
+  margin: 0.8em 0 0;
+  max-width: 24ch;
+  font-size: var(--fs-lead);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-text-dim);
+}
+
+.section__title {
+  margin: 0 0 0.35em;
+  font-size: var(--fs-title);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+/* Una palabra del título toma la luz de la escena. */
+.hl {
+  color: var(--color-glow);
+  transition: color 0.8s ease;
+}
+
+.eyebrow {
+  margin: 0 0 1.1em;
+  color: var(--color-mint);
+}
+
+.section__text {
+  margin: 0 0 1em;
+  max-width: 38ch;
+  color: var(--color-text-dim);
+}
+
+/* Entrada del texto: un solo momento, cuando termina el loader. */
+.hero .intro {
+  transition:
+    opacity 0.9s ease 0.35s,
+    transform 0.9s ease 0.35s;
+}
+
+body.is-loading .hero .intro {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 760px) {
+  .section,
+  .section:not(.hero) {
+    width: 100%;
+    padding: 0 22px 120px;
+    justify-content: flex-end;
+  }
+  /* En móvil el texto ocupa todo el ancho: velo casi opaco, con una franja arriba para ver el cuarto. */
+  .section:not(.hero) {
+    padding-top: 30vh;
+    padding-top: 30svh;
+    background: linear-gradient(
+      to bottom,
+      rgb(var(--bg-rgb) / 0) 0,
+      rgb(var(--bg-rgb) / 0.92) 26vh,
+      rgb(var(--bg-rgb) / 0.92)
+    );
+  }
+  .hero {
+    justify-content: flex-end;
+  }
+  .intro {
+    margin-top: 52vh;
+    margin-top: 52svh;
+  }
+  .tagline {
+    max-width: 30ch;
+  }
+}

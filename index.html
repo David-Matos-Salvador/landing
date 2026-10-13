@@ -1,182 +1,230 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>David Matos</title>
-  <meta name="description" content="David Matos builds things for the web, and the server they run on.">
-  <meta name="theme-color" content="#0F1E1A">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23FFB45C'/></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
-        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.5/lib/three-vrm.module.min.js"
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>David Matos</title>
+    <meta name="description" content="David Matos builds things for the web, and the server they run on." />
+    <meta name="theme-color" content="#0F1E1A" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23FFB45C'/></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=M+PLUS+1+Code:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/tokens.css" />
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/loader.css" />
+    <link rel="stylesheet" href="styles/nav.css" />
+    <link rel="stylesheet" href="styles/sections.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/disc.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+          "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.5/lib/three-vrm.module.min.js"
+        }
       }
-    }
-  </script>
-</head>
-<body data-mode="lofi" class="is-loading">
-  <!-- Pantalla de carga: el porcentaje refleja el progreso real (fuentes, escena, avatar). -->
-  <div class="loader" id="loader" role="status" aria-live="polite">
-    <p class="loader__line">Brewing coffee…</p>
-    <p class="loader__count" aria-label="Loading"><span id="loader-num">0</span>%</p>
-  </div>
+    </script>
+  </head>
+  <body data-mode="lofi" class="is-loading">
+    <!-- Pantalla de carga: el porcentaje refleja el progreso real (fuentes, escena, avatar). -->
+    <div class="loader" id="loader" role="status" aria-live="polite">
+      <p class="loader__line">Brewing coffee…</p>
+      <p class="loader__count" aria-label="Loading"><span id="loader-num">0</span>%</p>
+    </div>
 
-  <canvas id="scene" aria-label="A small 3D room at night: rain on the window, a desk lamp and a laptop with code."></canvas>
+    <canvas
+      id="scene"
+      aria-label="A small 3D room at night: rain on the window, a desk lamp and a laptop with code."
+    ></canvas>
 
-  <nav class="nav" aria-label="Sections">
-    <a class="nav__brand" href="#room">dm</a>
-    <ul class="nav__links">
-      <li><a href="#room" data-section="room" aria-current="true">Room</a></li>
-      <li><a href="#about" data-section="about">About</a></li>
-      <li><a href="#work" data-section="work">Work</a></li>
-      <li><a href="#projects" data-section="projects">Projects</a></li>
-      <li><a href="#life" data-section="life">Life</a></li>
-      <li><a href="#contact" data-section="contact">Contact</a></li>
-    </ul>
-  </nav>
-
-  <!-- Disco flotante: clic = canción al azar / pausa. Sin información de la canción. -->
-  <button id="play" class="disc" type="button" aria-pressed="false" aria-label="Play a random song">
-    <span class="disc__vinyl" aria-hidden="true">
-      <span class="disc__label"></span>
-    </span>
-  </button>
-
-  <main class="page">
-    <section id="room" class="section hero" data-section="room">
-      <header class="intro">
-        <p class="eyebrow">Full-stack web developer</p>
-        <h1 class="name">David<br>Matos</h1>
-        <p class="tagline">I build things for the web, and the server they run on.</p>
-      </header>
-    </section>
-
-    <section id="about" class="section" data-section="about">
-      <p class="eyebrow">01 / About</p>
-      <h2 class="section__title">Hi, I'm <span class="hl">David.</span></h2>
-      <p class="section__text">I'm a full-stack web developer. By day I build a travel site with Angular and Node: server-rendered pages, the APIs behind them and the tests that keep them honest.</p>
-      <p class="section__text">I work AI-first. I write the spec, direct the coding agents, and review every change myself before it ships.</p>
-
-      <h3 class="label">How I work</h3>
-      <ul class="ways">
-        <li><strong>Analysis before code.</strong> I compare the options first, then build the one that wins.</li>
-        <li><strong>Why, until the root cause.</strong> I'd rather say "I'm lost" than ship a fix I don't understand.</li>
-        <li><strong>Write it down.</strong> Every project of mine has one guide that could rebuild it from zero.</li>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__brand" href="#room">dm</a>
+      <ul class="nav__links">
+        <li><a href="#room" data-section="room" aria-current="true">Room</a></li>
+        <li><a href="#about" data-section="about">About</a></li>
+        <li><a href="#work" data-section="work">Work</a></li>
+        <li><a href="#projects" data-section="projects">Projects</a></li>
+        <li><a href="#life" data-section="life">Life</a></li>
+        <li><a href="#contact" data-section="contact">Contact</a></li>
       </ul>
+    </nav>
 
-      <h3 class="label">Every day</h3>
-      <ul class="stack">
-        <li>TypeScript</li><li>Angular</li><li>Node.js</li><li>MongoDB</li><li>Redis</li>
-      </ul>
-      <h3 class="label">Also in my toolbox</h3>
-      <ul class="stack stack--soft">
-        <li>Next.js</li><li>PostgreSQL</li><li>Prisma</li><li>Docker</li><li>Java</li><li>Three.js</li>
-      </ul>
-    </section>
+    <!-- Disco flotante: clic = canción al azar / pausa. Sin información de la canción. -->
+    <button id="play" class="disc" type="button" aria-pressed="false" aria-label="Play a random song">
+      <span class="disc__vinyl" aria-hidden="true">
+        <span class="disc__label"></span>
+      </span>
+    </button>
 
-    <section id="work" class="section" data-section="work">
-      <p class="eyebrow">02 / Work</p>
-      <h2 class="section__title">My <span class="hl">day job</span></h2>
-      <p class="section__text">I work on the growth team of an online travel company. Some of what I've done there:</p>
-      <ul class="work">
-        <li class="work__item">
-          <h3>A travel site, rendered on the server</h3>
-          <p>Angular SSR so pages load fast and search engines can read them.</p>
-        </li>
-        <li class="work__item">
-          <h3>An editor for marketing pages</h3>
-          <p>Versions, scheduled publishing and safe previews, plus the test suite that guards it.</p>
-        </li>
-        <li class="work__item">
-          <h3>AI in the team's workflow</h3>
-          <p>Specs, quality gates and review skills, so coding agents ship code we can trust.</p>
-        </li>
-        <li class="work__item">
-          <h3>A RAG proof of concept</h3>
-          <p>Two ways to answer questions over documents, compared by cost, speed and quality.</p>
-        </li>
-      </ul>
-    </section>
+    <main class="page">
+      <section id="room" class="section hero" data-section="room">
+        <header class="intro">
+          <p class="eyebrow">Full-stack web developer</p>
+          <h1 class="name">David<br />Matos</h1>
+          <p class="tagline">I build things for the web, and the server they run on.</p>
+        </header>
+      </section>
 
-    <section id="projects" class="section" data-section="projects">
-      <p class="eyebrow">03 / Projects</p>
-      <h2 class="section__title">Built <span class="hl">after hours</span></h2>
-      <ul class="work">
-        <li class="work__item">
-          <h3>gymapp</h3>
-          <p>An app for gyms: routines, a workout player, classes and payments, for members, coaches and admins.</p>
-          <p class="work__tags">Next.js · Prisma · PostgreSQL · Redis</p>
-        </li>
-        <li class="work__item">
-          <h3>My own cloud</h3>
-          <p>One server that runs everything I make: deploys from GitHub, HTTPS, monitoring and alerts on Telegram.</p>
-          <p class="work__tags">Ubuntu · Docker · Coolify · GitHub Actions</p>
-        </li>
-        <li class="work__item">
-          <h3>My own AI agent</h3>
-          <p>A self-hosted agent I talk to on Telegram, with one profile for my career and one for me.</p>
-          <p class="work__tags">Hermes Agent · Docker</p>
-        </li>
-        <li class="work__item">
-          <h3>This room</h3>
-          <p>A 3D scene that turns into a bachata party when you press play.</p>
-          <p class="work__tags">Three.js · WebGL shaders</p>
-        </li>
-      </ul>
-    </section>
+      <section id="about" class="section" data-section="about">
+        <p class="eyebrow">01 / About</p>
+        <h2 class="section__title">Hi, I'm <span class="hl">David.</span></h2>
+        <p class="section__text">
+          I'm a full-stack web developer. By day I build a travel site with Angular and Node: server-rendered
+          pages, the APIs behind them and the tests that keep them honest.
+        </p>
+        <p class="section__text">
+          I work AI-first. I write the spec, direct the coding agents, and review every change myself before
+          it ships.
+        </p>
 
-    <section id="life" class="section" data-section="life">
-      <p class="eyebrow">04 / Life</p>
-      <h2 class="section__title">Away from the <span class="hl">keyboard</span></h2>
-      <ul class="life">
-        <li>
-          <h3>Bachata</h3>
-          <p>Classes and socials. The goal: feel the music instead of counting steps.</p>
-        </li>
-        <li>
-          <h3>Anime</h3>
-          <p>One Piece first. Yes, all of it.</p>
-        </li>
-        <li>
-          <h3>The gym</h3>
-          <p>Discipline you can measure. It's why I built gymapp.</p>
-        </li>
-        <li>
-          <h3>Math for 3D</h3>
-          <p>Learning trigonometry to write my own 3D renderer in a terminal.</p>
-        </li>
-        <li>
-          <h3>Philosophy</h3>
-          <p>Existentialism and a daily memento mori.</p>
-        </li>
-        <li>
-          <h3>English</h3>
-          <p>Practicing every day. This page is part of the homework.</p>
-        </li>
-      </ul>
-    </section>
+        <h3 class="label">How I work</h3>
+        <ul class="ways">
+          <li>
+            <strong>Analysis before code.</strong> I compare the options first, then build the one that wins.
+          </li>
+          <li>
+            <strong>Why, until the root cause.</strong> I'd rather say "I'm lost" than ship a fix I don't
+            understand.
+          </li>
+          <li>
+            <strong>Write it down.</strong> Every project of mine has one guide that could rebuild it from
+            zero.
+          </li>
+        </ul>
 
-    <section id="contact" class="section" data-section="contact">
-      <p class="eyebrow">05 / Contact</p>
-      <h2 class="section__title">Say <span class="hl">hi</span></h2>
-      <p class="section__text">The easiest way to find me and my code.</p>
-      <div class="links">
-        <a href="https://www.linkedin.com/in/victor-david-m-1b77a718b/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/David-Matos-Salvador" target="_blank" rel="noopener">GitHub</a>
-        <a href="/links/">All my links</a>
-      </div>
-    </section>
-  </main>
+        <h3 class="label">Every day</h3>
+        <ul class="stack">
+          <li>TypeScript</li>
+          <li>Angular</li>
+          <li>Node.js</li>
+          <li>MongoDB</li>
+          <li>Redis</li>
+        </ul>
+        <h3 class="label">Also in my toolbox</h3>
+        <ul class="stack stack--soft">
+          <li>Next.js</li>
+          <li>PostgreSQL</li>
+          <li>Prisma</li>
+          <li>Docker</li>
+          <li>Java</li>
+          <li>Three.js</li>
+        </ul>
+      </section>
 
-  <audio id="music" preload="metadata"></audio>
-  <noscript><p class="noscript">Turn on JavaScript to see the room.</p></noscript>
-  <script type="module" src="main.js"></script>
-</body>
+      <section id="work" class="section" data-section="work">
+        <p class="eyebrow">02 / Work</p>
+        <h2 class="section__title">My <span class="hl">day job</span></h2>
+        <p class="section__text">
+          I work on the growth team of an online travel company. Some of what I've done there:
+        </p>
+        <ul class="work">
+          <li class="work__item">
+            <h3>A travel site, rendered on the server</h3>
+            <p>Angular SSR so pages load fast and search engines can read them.</p>
+          </li>
+          <li class="work__item">
+            <h3>An editor for marketing pages</h3>
+            <p>Versions, scheduled publishing and safe previews, plus the test suite that guards it.</p>
+          </li>
+          <li class="work__item">
+            <h3>AI in the team's workflow</h3>
+            <p>Specs, quality gates and review skills, so coding agents ship code we can trust.</p>
+          </li>
+          <li class="work__item">
+            <h3>A RAG proof of concept</h3>
+            <p>Two ways to answer questions over documents, compared by cost, speed and quality.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section id="projects" class="section" data-section="projects">
+        <p class="eyebrow">03 / Projects</p>
+        <h2 class="section__title">Built <span class="hl">after hours</span></h2>
+        <ul class="work">
+          <li class="work__item">
+            <h3>gymapp</h3>
+            <p>
+              An app for gyms: routines, a workout player, classes and payments, for members, coaches and
+              admins.
+            </p>
+            <p class="work__tags">Next.js · Prisma · PostgreSQL · Redis</p>
+          </li>
+          <li class="work__item">
+            <h3>My own cloud</h3>
+            <p>
+              One server that runs everything I make: deploys from GitHub, HTTPS, monitoring and alerts on
+              Telegram.
+            </p>
+            <p class="work__tags">Ubuntu · Docker · Coolify · GitHub Actions</p>
+          </li>
+          <li class="work__item">
+            <h3>My own AI agent</h3>
+            <p>A self-hosted agent I talk to on Telegram, with one profile for my career and one for me.</p>
+            <p class="work__tags">Hermes Agent · Docker</p>
+          </li>
+          <li class="work__item">
+            <h3>This room</h3>
+            <p>A 3D scene that turns into a bachata party when you press play.</p>
+            <p class="work__tags">Three.js · WebGL shaders</p>
+          </li>
+        </ul>
+      </section>
+
+      <section id="life" class="section" data-section="life">
+        <p class="eyebrow">04 / Life</p>
+        <h2 class="section__title">Away from the <span class="hl">keyboard</span></h2>
+        <ul class="life">
+          <li>
+            <h3>Bachata</h3>
+            <p>Classes and socials. The goal: feel the music instead of counting steps.</p>
+          </li>
+          <li>
+            <h3>Anime</h3>
+            <p>One Piece first. Yes, all of it.</p>
+          </li>
+          <li>
+            <h3>The gym</h3>
+            <p>Discipline you can measure. It's why I built gymapp.</p>
+          </li>
+          <li>
+            <h3>Math for 3D</h3>
+            <p>Learning trigonometry to write my own 3D renderer in a terminal.</p>
+          </li>
+          <li>
+            <h3>Philosophy</h3>
+            <p>Existentialism and a daily memento mori.</p>
+          </li>
+          <li>
+            <h3>English</h3>
+            <p>Practicing every day. This page is part of the homework.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section id="contact" class="section" data-section="contact">
+        <p class="eyebrow">05 / Contact</p>
+        <h2 class="section__title">Say <span class="hl">hi</span></h2>
+        <p class="section__text">The easiest way to find me and my code.</p>
+        <div class="links">
+          <a href="https://www.linkedin.com/in/victor-david-m-1b77a718b/" target="_blank" rel="noopener"
+            >LinkedIn</a
+          >
+          <a href="https://github.com/David-Matos-Salvador" target="_blank" rel="noopener">GitHub</a>
+          <a href="/links/">All my links</a>
+        </div>
+      </section>
+    </main>
+
+    <audio id="music" preload="metadata"></audio>
+    <noscript><p class="noscript">Turn on JavaScript to see the room.</p></noscript>
+    <script type="module" src="src/main.js"></script>
+  </body>
 </html>

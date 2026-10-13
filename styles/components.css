@@ -1,0 +1,149 @@
+/* Bloques de contenido dentro de las secciones: listas, etiquetas, tarjetas y enlaces. */
+
+/* Etiquetas en fuente de código: numeran las secciones y titulan los grupos. */
+.eyebrow,
+.label,
+.work__tags {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ways {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  max-width: 40ch;
+}
+
+.ways li {
+  padding-left: 16px;
+  border-left: 2px solid color-mix(in srgb, var(--color-glow) 60%, transparent);
+  color: var(--color-text-dim);
+}
+
+.ways strong {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* Herramientas: etiquetas en la fuente de código, como la pantalla de la laptop. */
+.stack {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 40ch;
+}
+
+.stack li {
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-mint) 16%, transparent);
+  color: var(--color-mint);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.stack--soft li {
+  background: none;
+  border: 1px solid rgb(var(--text-rgb) / 0.2);
+  color: var(--color-text-dim);
+}
+
+.work {
+  margin: 0.6em 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 24px;
+}
+
+.work__item h3 {
+  margin: 0;
+  font-size: var(--fs-lead);
+  font-weight: 700;
+  color: var(--color-glow);
+  transition: color 0.8s ease;
+}
+
+.work__item p {
+  margin: 0.2em 0 0;
+  max-width: 40ch;
+  color: var(--color-text-dim);
+}
+
+.work__item .work__tags {
+  margin-top: 0.7em;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--color-mint) 80%, transparent);
+}
+
+/* Hobbies: tarjetas pequeñas en dos columnas. */
+.life {
+  margin: 0.6em 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 560px;
+}
+
+.life li {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgb(var(--bg-rgb) / 0.6);
+  border: 1px solid rgb(var(--text-rgb) / 0.12);
+}
+
+.life h3 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--color-glow);
+  transition: color 0.8s ease;
+}
+
+.life p {
+  margin: 0.25em 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--color-text-dim);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.links a {
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: var(--fs-lead);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  border-bottom: 3px solid color-mix(in srgb, var(--color-glow) 70%, transparent);
+}
+
+.links a:hover {
+  border-color: var(--color-glow);
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 760px) {
+  .life {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .life li {
+    padding: 12px;
+  }
+}
