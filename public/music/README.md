@@ -19,7 +19,7 @@ Canciones del reproductor de la landing. **Solo música con derecho de uso públ
    ```
    - `bpm`: tempo aproximado; la escena "baila" a ese ritmo (si no lo sabes, deja 128).
    - `credit`: déjalo vacío salvo que la licencia pida mencionar al autor (p. ej. CC BY).
-3. Publica: `git add music && git commit -m "Nueva canción" && git push`.
+3. Publica: `git add public/music && git commit -m "Nueva canción" && git push`.
    Coolify despliega solo (Auto Deploy).
 
 Las pistas `lluvia-de-medianoche.mp3` y `cafe-y-requinto.mp3` son de prueba, generadas con código.

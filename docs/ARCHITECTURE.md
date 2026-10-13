@@ -8,7 +8,9 @@ Guía para leer el código. La idea central: **cada archivo hace una sola cosa**
 ```
 index.html              La página: contenido de las secciones y qué CSS/JS se carga
 links/                  El linktree (otra página, mismo sistema de colores)
-music/                  Canciones y playlist.json
+public/music/           Canciones y playlist.json (public/ se copia tal cual al sitio)
+vite.config.js          Configuración del build (dos páginas: principal y linktree)
+dist/                   Resultado del build; no se edita ni se sube a git
 styles/                 Un archivo CSS por componente
   tokens.css            Variables: colores, fuentes, tamaños  ← empieza por aquí
   base.css              Reset, lienzo 3D de fondo, accesibilidad global
@@ -93,11 +95,14 @@ arriba y con nombre; el código que dice _cómo_ se mueve va debajo.
 
 ## Decisiones (y por qué)
 
-- **Sin paso de build.** El navegador carga los archivos de `src/` tal cual, con módulos
-  ES nativos y un import map para Three.js. Lo que lees es lo que se ejecuta: no hay
-  bundler ni transpilador que entender primero. El costo: el navegador pide ~25 archivos
-  pequeños en vez de uno. Para una página personal está bien; si un día pesa, se agrega
-  Vite sin cambiar la estructura.
+- **Vite como herramienta de build.** En desarrollo sirve los archivos de `src/` uno por
+  uno y recarga la página al guardar. Para producción (`npm run build`) junta todo en la
+  carpeta `dist/`: un solo JavaScript minificado con únicamente las partes de Three.js que
+  se usan, un CSS, y un hash en cada nombre de archivo para que el navegador los guarde
+  en caché. Resultado: ~150 kB de JavaScript comprimido en vez de ~410 kB desde un CDN.
+  El código que escribes no cambia: siguen siendo módulos ES normales.
+- **El avatar se descarga aparte.** `avatar.js` usa `import()` dinámico, así que Vite deja
+  esas librerías en archivos separados que solo se piden si hay un avatar configurado.
 - **JavaScript con JSDoc, no TypeScript.** Los comentarios `@param` documentan los tipos y
   el editor los usa para autocompletar, sin necesitar compilación.
 - **CSS por componente con tokens.** Los colores tienen nombre por función
@@ -109,9 +114,11 @@ arriba y con nombre; el código que dice _cómo_ se mueve va debajo.
 
 ```bash
 npm install        # una vez
-npm run dev        # servidor local en http://localhost:5173
+npm run dev        # servidor local en http://localhost:5173, recarga al guardar
 npm run check      # ESLint (errores) + Prettier (formato)
 npm run format     # corrige el formato
+npm run build      # genera dist/, lo mismo que se publica
+npm run preview    # sirve dist/ en http://localhost:4173 para probar el build
 ```
 
-GitHub Actions corre `npm run check` en cada push (`.github/workflows/check.yml`).
+GitHub Actions corre `npm run check` y `npm run build` en cada push (`.github/workflows/check.yml`).

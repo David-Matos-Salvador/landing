@@ -1,4 +1,4 @@
-# Revisa el código en cada push y pull request: ESLint (errores) y Prettier (formato).
+# Revisa el código en cada push y pull request: ESLint, Prettier y que el build funcione.
 name: Check
 
 on:
@@ -16,3 +16,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run build

@@ -6,7 +6,7 @@
 /** Avatar VRoid (.vrm). Vacío = silla vacía y la laptop teclea sola. */
 export const AVATAR_URL = "";
 
-/** Lista de canciones (mp3 con derecho de uso, servidos por nginx). Ver music/README.md. */
+/** Lista de canciones (mp3 con derecho de uso, servidos por nginx). Ver public/music/README.md. */
 export const PLAYLIST_URL = "music/playlist.json";
 export const MUSIC_DIR = "music/";
 

@@ -1,12 +1,16 @@
-# Sitio estático servido por nginx. Coolify lo publica con HTTPS en davidmatos.lat y www.
-FROM nginx:1.29-alpine
+# Etapa 1: construir el sitio con Vite (Node solo existe aquí, no en la imagen final).
+FROM node:24-alpine AS build
+WORKDIR /app
+# Primero solo las dependencias: Docker reutiliza esta capa mientras package*.json no cambie.
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
 
+# Etapa 2: nginx sirviendo el resultado. Coolify lo publica con HTTPS en davidmatos.lat y www.
+FROM nginx:1.29-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY index.html /usr/share/nginx/html/
-COPY src/ /usr/share/nginx/html/src/
-COPY styles/ /usr/share/nginx/html/styles/
-COPY music/ /usr/share/nginx/html/music/
-COPY links/ /usr/share/nginx/html/links/
+COPY --from=build /app/dist/ /usr/share/nginx/html/
 
 EXPOSE 80
 
