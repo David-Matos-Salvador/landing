@@ -14,6 +14,7 @@ import { createRhythm } from "./scene/rhythm.js";
 import { buildRoom } from "./scene/room.js";
 import { createStage } from "./scene/stage.js";
 import { createLampSwitch } from "./ui/lampSwitch.js";
+import { createLanguageSwitch } from "./ui/languageSwitch.js";
 import { createLoader } from "./ui/loader.js";
 import { initNav } from "./ui/nav.js";
 import { createPlayer } from "./ui/player.js";
@@ -21,7 +22,12 @@ import { createPlayer } from "./ui/player.js";
 /** Si la pestaña estuvo en segundo plano, el salto de tiempo se limita para que nada "teletransporte". */
 const MAX_FRAME_SECONDS = 0.05;
 
-// --- 1. Página: loader, música y navbar ---------------------------------------------------
+// --- 1. Página: idioma, loader, música y navbar ---------------------------------------------------
+// El idioma va primero: las demás piezas ya nacen con sus textos traducidos.
+createLanguageSwitch({
+  button: document.getElementById("language"),
+  meta: { title: "meta.title", description: "meta.description" },
+});
 const loader = createLoader({
   numberElement: document.getElementById("loader-num"),
   tasks: ["fonts", "shaders", "avatar", "firstFrame"],

@@ -17,12 +17,15 @@ styles/                 Un archivo CSS por componente
   loader.css  nav.css  sections.css  components.css  disc.css  switch.css
 src/
   main.js               Punto de entrada: crea todo y corre el loop  ← empieza por aquí
+  links.js              Punto de entrada del linktree (solo el idioma)
   config.js             Valores que uno querría cambiar (URLs, tempo, paleta)
+  i18n/                 Idiomas: en.js, es.js y index.js (qué idioma está activo, t())
   lib/                  Utilidades sin estado
     env.js              ¿Pantalla chica? ¿Menos animaciones?
     math.js             smoothstep, approach
     onset.js            Detector de golpes (números puros) + onset.test.js
     envelope.js         Intensidad de la canción de 0 a 1 + envelope.test.js
+    pickLanguage.js     Elige el idioma inicial + pickLanguage.test.js
   scene/                Todo lo 3D
     stage.js            Renderer, escena, cámara y resize
     layout.js           Medidas y colores del cuarto (dónde está cada cosa)
@@ -39,6 +42,7 @@ src/
     loader.js           Pantalla de carga
     nav.js              Resalta la sección actual en el navbar
     lampSwitch.js       Botón que prende y apaga la lámpara
+    languageSwitch.js   Botón EN / ES
     player.js           Disco de música y modo lofi / bachata
     audioMeter.js       Mide el bajo de la canción que suena (Web Audio API)
 ```
@@ -78,6 +82,18 @@ La música cambia luces y la pantalla de la laptop; no mueve la cámara ni los o
 
 Si el navegador no deja analizar el audio, `rhythm.js` usa un metrónomo con el campo
 `bpm` de la playlist. El resto de la escena no se entera de cuál de las dos fuentes se usó.
+
+## Idiomas
+
+El HTML trae el texto en inglés y cada elemento traducible lleva una clave:
+`<p data-i18n="hero.tagline">`. Al abrir la página, `i18n/index.js` elige el idioma
+(primero lo que la persona eligió antes, después el idioma de su navegador, y si no,
+inglés) y reemplaza cada texto por el del diccionario. Los textos que escribe el
+JavaScript (por ejemplo la etiqueta del disco) se piden con `t("clave")`, y las piezas que
+los usan se suscriben con `onLanguageChange()` para actualizarse al cambiar de idioma.
+
+Una prueba (`i18n.test.js`) falla si a un idioma le falta una clave o si el HTML usa una
+clave que no existe.
 
 ## Los tres patrones que se repiten
 

@@ -18,21 +18,28 @@
     />
     <link rel="stylesheet" href="/styles/tokens.css" />
     <link rel="stylesheet" href="/links/links.css" />
+    <link rel="stylesheet" href="/styles/lang.css" />
   </head>
   <body>
+    <button id="language" class="lang" type="button">
+      <span data-lang="en">EN</span><span aria-hidden="true">/</span><span data-lang="es">ES</span>
+    </button>
+
     <main class="tree">
       <header class="tree__head">
         <div class="tree__avatar" aria-hidden="true">dm</div>
         <h1 class="tree__name">David Matos</h1>
-        <p class="tree__bio">I build things for the web, and the server they run on.</p>
+        <p class="tree__bio" data-i18n="hero.tagline">
+          I build things for the web, and the server they run on.
+        </p>
       </header>
 
       <!-- Para agregar un enlace: copia un <li> y cambia href, título y descripción. -->
       <ul class="tree__links">
         <li>
           <a class="tree__link" href="/">
-            <span class="tree__title">My room</span>
-            <span class="tree__desc">A 3D room that plays bachata</span>
+            <span class="tree__title" data-i18n="links.room.title">My room</span>
+            <span class="tree__desc" data-i18n="links.room.text">A 3D room that plays bachata</span>
           </a>
         </li>
         <li>
@@ -42,48 +49,49 @@
             target="_blank"
             rel="noopener"
           >
-            <span class="tree__title">LinkedIn</span>
-            <span class="tree__desc">My work experience</span>
+            <span class="tree__title" data-i18n="links.linkedin.title">LinkedIn</span>
+            <span class="tree__desc" data-i18n="links.linkedin.text">My work experience</span>
           </a>
         </li>
         <li>
           <a class="tree__link" href="https://github.com/David-Matos-Salvador" target="_blank" rel="noopener">
-            <span class="tree__title">GitHub</span>
-            <span class="tree__desc">My code and experiments</span>
+            <span class="tree__title" data-i18n="links.github.title">GitHub</span>
+            <span class="tree__desc" data-i18n="links.github.text">My code and experiments</span>
           </a>
         </li>
         <li>
           <a class="tree__link" href="https://gym-qa.davidmatos.lat" target="_blank" rel="noopener">
-            <span class="tree__title">gymapp</span>
-            <span class="tree__desc">A gym management app, in testing</span>
+            <span class="tree__title" data-i18n="links.gymapp.title">gymapp</span>
+            <span class="tree__desc" data-i18n="links.gymapp.text">A gym management app, in testing</span>
           </a>
         </li>
       </ul>
 
       <!-- Paneles privados: piden usuario y contraseña. -->
-      <h2 class="tree__group">Private, login needed</h2>
+      <h2 class="tree__group" data-i18n="links.privateGroup">Private, login needed</h2>
       <ul class="tree__links tree__links--private">
         <li>
           <a class="tree__link" href="https://coolify.davidmatos.lat" target="_blank" rel="noopener">
-            <span class="tree__title">Coolify</span>
-            <span class="tree__desc">Where I deploy my apps</span>
+            <span class="tree__title" data-i18n="links.coolify.title">Coolify</span>
+            <span class="tree__desc" data-i18n="links.coolify.text">Where I deploy my apps</span>
           </a>
         </li>
         <li>
           <a class="tree__link" href="https://monitor.davidmatos.lat" target="_blank" rel="noopener">
-            <span class="tree__title">Server monitor</span>
-            <span class="tree__desc">CPU, memory and disk of my server</span>
+            <span class="tree__title" data-i18n="links.monitor.title">Server monitor</span>
+            <span class="tree__desc" data-i18n="links.monitor.text">CPU, memory and disk of my server</span>
           </a>
         </li>
         <li>
           <a class="tree__link" href="https://hermes.davidmatos.lat" target="_blank" rel="noopener">
-            <span class="tree__title">Hermes</span>
-            <span class="tree__desc">My AI agent</span>
+            <span class="tree__title" data-i18n="links.hermes.title">Hermes</span>
+            <span class="tree__desc" data-i18n="links.hermes.text">My AI agent</span>
           </a>
         </li>
       </ul>
 
-      <p class="tree__note">more coming soon, I'm always building something</p>
+      <p class="tree__note" data-i18n="links.note">more coming soon, I'm always building something</p>
     </main>
+    <script type="module" src="/src/links.js"></script>
   </body>
 </html>

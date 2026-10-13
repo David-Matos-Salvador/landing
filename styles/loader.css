@@ -37,3 +37,8 @@ body:not(.is-loading) .loader {
   color: var(--color-amber);
   font-variant-numeric: tabular-nums;
 }
+
+/* Hasta que el JavaScript elige el idioma, la frase del loader no se muestra. */
+html:not(.i18n-ready) .loader__line {
+  visibility: hidden;
+}

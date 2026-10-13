@@ -3,6 +3,7 @@
  * "bachata"; otro clic la pausa y vuelve a "lofi". No muestra información de la canción.
  */
 import { DEFAULT_BPM, MUSIC_DIR, PLAYLIST_URL } from "../config.js";
+import { onLanguageChange, t } from "../i18n/index.js";
 import { createAudioMeter } from "./audioMeter.js";
 
 /** @typedef {{ title: string, artist: string, file: string, bpm?: number, credit?: string }} Track */
@@ -56,12 +57,19 @@ export function createPlayer({ button, audio }) {
   /** El navegador puede rechazar play() (por ejemplo, sin un clic previo): no es un error nuestro. */
   const play = () => audio.play().catch(() => {});
 
+  /** Texto que leen los lectores de pantalla; cambia con el estado y con el idioma. */
+  function showLabel() {
+    button.setAttribute("aria-label", t(mode === "bachata" ? "player.pause" : "player.play"));
+  }
+  onLanguageChange(showLabel);
+  showLabel();
+
   /** @param {boolean} isPlaying */
   function setPlaying(isPlaying) {
     mode = isPlaying ? "bachata" : "lofi";
     document.body.dataset.mode = mode; // el CSS cambia el color de acento con este atributo
     button.setAttribute("aria-pressed", String(isPlaying));
-    button.setAttribute("aria-label", isPlaying ? "Pause the music" : "Play a random song");
+    showLabel();
     if (isPlaying && playlist.length) {
       meter.start(); // dentro del clic: el navegador exige una acción de la persona
       play();
