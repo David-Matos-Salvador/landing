@@ -6,6 +6,13 @@
 /** Avatar VRoid (.vrm). Vacío = silla vacía y la laptop teclea sola. */
 export const AVATAR_URL = "";
 
+/**
+ * Imagen del cuadro de la pared. Vacío = el dibujo original (luna sobre colinas).
+ * Para usar la tuya: copia el archivo a public/ y pon aquí su ruta, por ejemplo "/cuadro.jpg".
+ * Se recorta sola para llenar el marco. Usa solo imágenes que tengas derecho a publicar.
+ */
+export const PICTURE_URL = "";
+
 /** Lista de canciones (mp3 con derecho de uso, servidos por nginx). Ver public/music/README.md. */
 export const PLAYLIST_URL = "music/playlist.json";
 export const MUSIC_DIR = "music/";

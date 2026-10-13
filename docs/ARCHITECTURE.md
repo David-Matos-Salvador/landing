@@ -25,6 +25,7 @@ src/
     math.js             smoothstep, approach
     onset.js            Detector de golpes (números puros) + onset.test.js
     envelope.js         Intensidad de la canción de 0 a 1 + envelope.test.js
+    coverFit.js         Recorta una imagen para llenar un marco + coverFit.test.js
     pickLanguage.js     Elige el idioma inicial + pickLanguage.test.js
   scene/                Todo lo 3D
     stage.js            Renderer, escena, cámara y resize

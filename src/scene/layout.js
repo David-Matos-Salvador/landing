@@ -32,4 +32,6 @@ export const COLORS = {
   chair: "#22352E",
   rug: "#C2A27A",
   hoodie: "#D9628A",
+  soda: "#1FA34A", // vaso de gaseosa lima-limón
+  sodaStripe: "#D6E84A",
 };

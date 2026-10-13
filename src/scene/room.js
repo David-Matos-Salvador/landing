@@ -12,6 +12,7 @@ import { addLaptop } from "./objects/laptop.js";
 import { addPicture } from "./objects/picture.js";
 import { addRug } from "./objects/rug.js";
 import { addShelf } from "./objects/shelf.js";
+import { addSodaCup } from "./objects/sodaCup.js";
 import { addWindow } from "./objects/window.js";
 import { block } from "./primitives.js";
 
@@ -37,6 +38,7 @@ export function buildRoom(scene) {
   addRug(room);
   addShelf(room);
   addPicture(room);
+  addSodaCup(room);
 
   /**
    * Lo único que se mueve por sí solo en el cuarto: la lluvia de la ventana.

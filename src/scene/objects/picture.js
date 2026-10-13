@@ -1,6 +1,10 @@
-/** Cuadro sobre el escritorio. El arte es original: una luna sobre colinas, dibujada con canvas 2D. */
+/**
+ * Cuadro sobre el escritorio. Muestra la imagen de PICTURE_URL (config.js); si no hay, o si
+ * falla al cargar, queda el dibujo original: una luna sobre colinas hecha con canvas 2D.
+ */
 import * as THREE from "three";
-import { PALETTE } from "../../config.js";
+import { PALETTE, PICTURE_URL } from "../../config.js";
+import { coverFit } from "../../lib/coverFit.js";
 import { COLORS, PICTURE, ROOM } from "../layout.js";
 import { block } from "../primitives.js";
 
@@ -51,6 +55,23 @@ function paintArt() {
   return canvas;
 }
 
+/** Reemplaza el dibujo por una imagen propia, recortada para llenar el marco. */
+function showCustomImage(material, url) {
+  new THREE.TextureLoader().load(
+    url,
+    (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      const { repeat, offset } = coverFit(texture.image.width / texture.image.height, PICTURE.w / PICTURE.h);
+      texture.repeat.set(repeat.x, repeat.y);
+      texture.offset.set(offset.x, offset.y);
+      material.map = texture;
+      material.needsUpdate = true;
+    },
+    undefined, // progreso: no lo usamos
+    () => console.warn(`No se pudo cargar la imagen del cuadro (${url}); queda el dibujo original.`),
+  );
+}
+
 /** @param {THREE.Group} room */
 export function addPicture(room) {
   const wallX = -ROOM.w / 2;
@@ -68,11 +89,11 @@ export function addPicture(room) {
     ),
   );
 
-  const art = new THREE.Mesh(
-    new THREE.PlaneGeometry(PICTURE.w, PICTURE.h),
-    new THREE.MeshStandardMaterial({ map: texture, roughness: 0.9 }),
-  );
+  const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.9 });
+  const art = new THREE.Mesh(new THREE.PlaneGeometry(PICTURE.w, PICTURE.h), material);
   art.position.set(wallX + 0.06, PICTURE.y, PICTURE.z);
   art.rotation.y = Math.PI / 2; // mira hacia el cuarto (+x)
   room.add(art);
+
+  if (PICTURE_URL) showCustomImage(material, PICTURE_URL);
 }
