@@ -21,6 +21,7 @@ src/
   lib/                  Utilidades sin estado
     env.js              ¿Pantalla chica? ¿Menos animaciones?
     math.js             smoothstep, approach
+    onset.js            Detector de golpes (números puros) + onset.test.js
   scene/                Todo lo 3D
     stage.js            Renderer, escena, cámara y resize
     layout.js           Medidas y colores del cuarto (dónde está cada cosa)
@@ -28,7 +29,7 @@ src/
     room.js             Arma el cuarto con los objetos de objects/
     objects/            Un archivo por objeto: window, desk, laptop, lamp, chair...
     lights.js           Luces generales (ambiente, luna, fiesta)
-    rhythm.js           Convierte el tempo en números (mix, beatLevel, sway)
+    rhythm.js           Convierte la música en números (mix, beatLevel, sway)
     mood.js             Aplica esos números a los colores de las luces
     cameraRig.js        Cámara: una toma por sección + parallax
     avatar.js           Avatar VRM opcional
@@ -36,6 +37,7 @@ src/
     loader.js           Pantalla de carga
     nav.js              Resalta la sección actual en el navbar
     player.js           Disco de música y modo lofi / bachata
+    audioMeter.js       Mide el bajo de la canción que suena (Web Audio API)
 ```
 
 ## Cómo fluyen los datos
@@ -43,7 +45,7 @@ src/
 En cada frame (60 veces por segundo), `animate()` en `main.js` hace esto, en orden:
 
 ```
-player  ──►  mode, bpm          ¿hay música? ¿a qué tempo?
+player  ──►  mode, bpm, readAudio()     ¿hay música? ¿hubo un golpe en este frame?
                 │
 rhythm.update() ──►  { mix, beatLevel, sway }     tres números, nada más
                 │
@@ -57,6 +59,16 @@ rhythm.update() ──►  { mix, beatLevel, sway }     tres números, nada más
 Los datos van **en una sola dirección**: de arriba hacia abajo. Ninguna pieza de abajo
 modifica a otra; solo reciben números y se actualizan a sí mismas. Por eso se puede leer
 (o cambiar) un archivo sin tener los demás en la cabeza.
+
+## Cómo la luz sigue la música
+
+`audioMeter.js` conecta el `<audio>` a un analizador del navegador y, en cada frame, mide
+la amplitud de las frecuencias graves (bombo y bajo). `lib/onset.js` decide si ese valor
+es un golpe: lo es cuando sube de pronto por encima del promedio reciente. `rhythm.js`
+convierte cada golpe en un destello (`beatLevel`) y en un paso del "1-2-3-tap" (`sway`).
+
+Si el navegador no deja analizar el audio, `rhythm.js` usa un metrónomo con el campo
+`bpm` de la playlist. El resto de la escena no se entera de cuál de las dos fuentes se usó.
 
 ## Los tres patrones que se repiten
 
@@ -115,7 +127,8 @@ arriba y con nombre; el código que dice _cómo_ se mueve va debajo.
 ```bash
 npm install        # una vez
 npm run dev        # servidor local en http://localhost:5173, recarga al guardar
-npm run check      # ESLint (errores) + Prettier (formato)
+npm run check      # ESLint (errores) + Prettier (formato) + pruebas
+npm test           # solo las pruebas (archivos *.test.js)
 npm run format     # corrige el formato
 npm run build      # genera dist/, lo mismo que se publica
 npm run preview    # sirve dist/ en http://localhost:4173 para probar el build

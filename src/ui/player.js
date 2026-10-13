@@ -3,6 +3,7 @@
  * "bachata"; otro clic la pausa y vuelve a "lofi". No muestra información de la canción.
  */
 import { DEFAULT_BPM, MUSIC_DIR, PLAYLIST_URL } from "../config.js";
+import { createAudioMeter } from "./audioMeter.js";
 
 /** @typedef {{ title: string, artist: string, file: string, bpm?: number, credit?: string }} Track */
 
@@ -30,6 +31,7 @@ export function createPlayer({ button, audio }) {
   /** @type {"lofi" | "bachata"} */
   let mode = "lofi";
   let bpm = DEFAULT_BPM;
+  const meter = createAudioMeter(audio);
 
   fetchPlaylist().then((list) => {
     playlist = list;
@@ -60,8 +62,12 @@ export function createPlayer({ button, audio }) {
     document.body.dataset.mode = mode; // el CSS cambia el color de acento con este atributo
     button.setAttribute("aria-pressed", String(isPlaying));
     button.setAttribute("aria-label", isPlaying ? "Pause the music" : "Play a random song");
-    if (isPlaying && playlist.length) play();
-    else audio.pause();
+    if (isPlaying && playlist.length) {
+      meter.start(); // dentro del clic: el navegador exige una acción de la persona
+      play();
+    } else {
+      audio.pause();
+    }
   }
 
   button.addEventListener("click", () => {
@@ -84,5 +90,7 @@ export function createPlayer({ button, audio }) {
     get bpm() {
       return bpm;
     },
+    /** Golpes reales de la canción en este frame, o null si no se puede analizar el audio. */
+    readAudio: meter.read,
   };
 }

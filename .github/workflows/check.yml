@@ -1,4 +1,4 @@
-# Revisa el código en cada push y pull request: ESLint, Prettier y que el build funcione.
+# Revisa el código en cada push y pull request: ESLint, Prettier, pruebas y que el build funcione.
 name: Check
 
 on:

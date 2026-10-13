@@ -78,8 +78,9 @@ function animate(timestamp) {
   const t = timer.getElapsed(); // segundos desde que empezó la escena
   const { mode, bpm } = player;
 
-  // Primero se calcula el ritmo; después cada pieza lo usa para moverse.
-  const beat = rhythm.update(dt, t, mode, bpm);
+  // Primero se calcula el ritmo (con los golpes reales de la canción, si se pueden leer);
+  // después cada pieza lo usa para moverse.
+  const beat = rhythm.update({ dt, t, mode, bpm, audio: player.readAudio(t, dt) });
 
   applyMood(beat, {
     screenLightColor: room.laptop.light.color,
