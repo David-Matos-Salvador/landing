@@ -21,6 +21,6 @@ const PARTY_LIGHT_INTENSITY = 9;
 export function applyMood({ mix, beatLevel }, { screenLightColor, rainTint, partyLight }) {
   screenLightColor.copy(LOFI_ACCENT).lerp(BACHATA_ACCENT, mix);
   rainTint.copy(LOFI_ACCENT).lerp(BACHATA_ACCENT, mix);
-  // Siempre queda un poco encendida (0.12) y sube con cada golpe del 1-2-3-tap.
+  // Siempre queda un poco encendida (0.12) y sube con cada golpe.
   partyLight.intensity = mix * PARTY_LIGHT_INTENSITY * (0.12 + beatLevel * 0.95);
 }

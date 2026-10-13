@@ -39,16 +39,12 @@ export function buildRoom(scene) {
   addPicture(room);
 
   /**
-   * Movimiento propio del cuarto, una vez por frame.
-   * @param {object} frame
-   * @param {number} frame.t segundos desde que empezó la escena
-   * @param {number} frame.sway balanceo de la bachata (-1 a 1)
+   * Lo único que se mueve por sí solo en el cuarto: la lluvia de la ventana.
+   * @param {number} t segundos desde que empezó la escena
    */
-  function update({ t, sway }) {
+  function update(t) {
     // La lluvia cae más lento si la persona pidió menos animaciones.
     rainWindow.uniforms.uTime.value = t * 0.35 * (reduceMotion ? 0.3 : 1);
-    hoodie.rotation.x = sway * 0.08; // el hoodie se mece un poquito con la música
-    room.rotation.y = reduceMotion ? 0 : Math.sin(t * 0.15) * 0.03; // el diorama "respira"
   }
 
   return { rainTint: rainWindow.uniforms.uTint.value, laptop, lamp, hoodie, update };

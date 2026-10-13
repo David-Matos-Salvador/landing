@@ -5,7 +5,7 @@ import { block, matte } from "../primitives.js";
 
 /**
  * @param {THREE.Group} room
- * @returns {{ hoodie: THREE.Mesh }} el hoodie se mece con la música y se oculta al cargar el avatar
+ * @returns {{ hoodie: THREE.Mesh }} el hoodie se oculta al cargar el avatar
  */
 export function addChair(room) {
   const chair = new THREE.Group();

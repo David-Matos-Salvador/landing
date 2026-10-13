@@ -87,11 +87,11 @@ function animate(timestamp) {
     rainTint: room.rainTint,
     partyLight: lights.party,
   });
-  room.update({ t, sway: beat.sway });
+  room.update(t);
   room.laptop.update({ t, mode, bpm });
   room.lamp.update({ dt, t, mix: beat.mix, isOn: loader.isDone });
-  avatar?.pose({ dt, t, mode, beatLevel: beat.beatLevel, sway: beat.sway });
-  cameraRig.update({ dt, sway: beat.sway });
+  avatar?.pose({ dt, t, mode, beatLevel: beat.beatLevel });
+  cameraRig.update(dt);
 
   renderer.render(scene, camera);
   requestAnimationFrame(animate);

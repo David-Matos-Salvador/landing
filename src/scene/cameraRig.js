@@ -1,7 +1,7 @@
 /**
  * Mueve la cámara. Cada sección de la página tiene una "toma" (dónde está la cámara y a qué
- * mira); al hacer scroll la cámara viaja de una toma a la siguiente. Encima se suman dos
- * movimientos pequeños: parallax con el mouse y balanceo con la bachata.
+ * mira); al hacer scroll la cámara viaja de una toma a la siguiente. Encima se suma un
+ * movimiento pequeño: parallax con el mouse. La música no mueve la cámara.
  */
 import * as THREE from "three";
 import { reduceMotion } from "../lib/env.js";
@@ -27,7 +27,6 @@ const TRAVEL_STARTS_AT = 0.45;
 /** Qué tan rápido persigue la cámara a su destino (más alto = más brusco). */
 const FOLLOW_RATE = 3;
 const PARALLAX = { x: 0.6, y: 0.35 };
-const SWAY_AMOUNT = 0.25;
 
 /** @param {THREE.PerspectiveCamera} camera */
 export function createCameraRig(camera) {
@@ -71,18 +70,14 @@ export function createCameraRig(camera) {
     goal.lookAt.copy(SHOTS[from].lookAt).lerp(SHOTS[to].lookAt, eased);
   }
 
-  /**
-   * @param {object} frame
-   * @param {number} frame.dt segundos desde el frame anterior
-   * @param {number} frame.sway balanceo de la bachata (-1 a 1)
-   */
-  function update({ dt, sway }) {
+  /** @param {number} dt segundos desde el frame anterior */
+  function update(dt) {
     updateGoal(scrollProgress());
     const follow = Math.min(1, dt * FOLLOW_RATE);
     current.position.lerp(goal.position, follow);
     current.lookAt.lerp(goal.lookAt, follow);
 
-    const offsetX = reduceMotion ? 0 : pointer.x * PARALLAX.x + sway * SWAY_AMOUNT;
+    const offsetX = reduceMotion ? 0 : pointer.x * PARALLAX.x;
     const offsetY = reduceMotion ? 0 : pointer.y * PARALLAX.y;
     camera.position.set(current.position.x + offsetX, current.position.y - offsetY, current.position.z);
     camera.lookAt(current.lookAt);

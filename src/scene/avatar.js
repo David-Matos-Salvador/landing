@@ -55,9 +55,8 @@ export async function loadAvatar(scene, url) {
    * @param {number} frame.t
    * @param {"lofi" | "bachata"} frame.mode
    * @param {number} frame.beatLevel
-   * @param {number} frame.sway
    */
-  function pose({ dt, t, mode, beatLevel, sway }) {
+  function pose({ dt, t, mode, beatLevel }) {
     if (mode === "lofi") {
       // Tecleando: brazos al frente, antebrazos sobre el teclado, un temblor de "dedos rápidos".
       rotate("leftUpperArm", -0.9, 0, -1.05 + Math.sin(t * 9) * 0.03);
@@ -68,7 +67,8 @@ export async function loadAvatar(scene, url) {
       rotate("head", 0.15 + Math.sin(t * 0.7) * 0.03, Math.sin(t * 0.4) * 0.05, 0);
       rotate("hips", 0, 0, 0);
     } else {
-      // Bachata sentado: cadera y hombros al ritmo 1-2-3-tap, la cabeza sigue el golpe.
+      // Bachata sentado: se mece de lado a lado y la cabeza sigue el golpe.
+      const sway = Math.sin(t * 2) * 0.8;
       rotate("leftUpperArm", -0.2, 0, -1.2 + beatLevel * 0.25);
       rotate("rightUpperArm", -0.2, 0, 1.2 - beatLevel * 0.25);
       rotate("leftLowerArm", 0, -0.6, 0);
