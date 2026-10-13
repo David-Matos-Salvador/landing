@@ -328,7 +328,7 @@ function drawEqualizer(t) {
   ctx.fillStyle = "#1E1030";
   ctx.fillRect(0, 0, 512, 320);
   ctx.fillStyle = "#F2E6D8";
-  ctx.font = '700 22px "Zen Maru Gothic", sans-serif';
+  ctx.font = '700 22px "Bricolage Grotesque", sans-serif';
   ctx.fillText("now playing", 24, 22);
   const beat = (t * BPM) / 60;
   for (let i = 0; i < 24; i++) {
@@ -562,6 +562,8 @@ const SHOTS = [
   { id: "room", pos: CAM_BASE.clone(), look: LOOK_AT.clone() },
   { id: "about", pos: new THREE.Vector3(1.2, 2.9, 1.6), look: new THREE.Vector3(-0.6, 2.5, -2.5) },   // la ventana
   { id: "work", pos: new THREE.Vector3(-0.2, 1.9, 0.9), look: new THREE.Vector3(-2.2, 1.2, -0.6) },  // la laptop
+  { id: "projects", pos: new THREE.Vector3(0.5, 2.4, 0.9), look: new THREE.Vector3(0.7, 2.05, -2.5) }, // la repisa
+  { id: "life", pos: new THREE.Vector3(0.6, 2.6, 0.3), look: new THREE.Vector3(-3.0, 2.45, 0.0) },     // el cuadro
   { id: "contact", pos: new THREE.Vector3(8.6, 7.2, 9.8), look: new THREE.Vector3(-0.4, 1.0, -0.4) }, // todo el cuarto
 ];
 const camTarget = { position: CAM_BASE.clone(), look: LOOK_AT.clone() };
