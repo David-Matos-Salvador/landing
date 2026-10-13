@@ -27,7 +27,8 @@ export const COLORS = {
   wood: "#A2774F",
   woodDark: "#7E5A3E",
   metal: "#1E2E28",
-  laptop: "#C9CFC8",
+  laptop: "#D9DCDE", // aluminio plateado
+  laptopDark: "#17191B", // teclado y marco de la pantalla
   chair: "#22352E",
   rug: "#C2A27A",
   hoodie: "#D9628A",

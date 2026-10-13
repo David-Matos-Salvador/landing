@@ -22,6 +22,7 @@ src/
     env.js              ¿Pantalla chica? ¿Menos animaciones?
     math.js             smoothstep, approach
     onset.js            Detector de golpes (números puros) + onset.test.js
+    envelope.js         Intensidad de la canción de 0 a 1 + envelope.test.js
   scene/                Todo lo 3D
     stage.js            Renderer, escena, cámara y resize
     layout.js           Medidas y colores del cuarto (dónde está cada cosa)
@@ -29,7 +30,7 @@ src/
     room.js             Arma el cuarto con los objetos de objects/
     objects/            Un archivo por objeto: window, desk, laptop, lamp, chair...
     lights.js           Luces generales (ambiente, luna, fiesta)
-    rhythm.js           Convierte la música en dos números (mix, beatLevel)
+    rhythm.js           Convierte la música en tres números (mix, energy, beatLevel)
     mood.js             Aplica esos números a los colores de las luces
     cameraRig.js        Cámara: una toma por sección + parallax con el mouse
     avatar.js           Avatar VRM opcional
@@ -47,7 +48,7 @@ En cada frame (60 veces por segundo), `animate()` en `main.js` hace esto, en ord
 ```
 player  ──►  mode, bpm, readAudio()     ¿hay música? ¿hubo un golpe en este frame?
                 │
-rhythm.update() ──►  { mix, beatLevel }           dos números, nada más
+rhythm.update() ──►  { mix, energy, beatLevel }   tres números, nada más
                 │
         ┌───────┼──────────┬──────────┬───────────┐
      applyMood  room    laptop      lamp      cameraRig      cada pieza los usa
@@ -63,10 +64,15 @@ modifica a otra; solo reciben números y se actualizan a sí mismas. Por eso se 
 ## Cómo la luz sigue la música
 
 `audioMeter.js` conecta el `<audio>` a un analizador del navegador y, en cada frame, mide
-la amplitud de las frecuencias graves (bombo y bajo). `lib/onset.js` decide si ese valor
-es un golpe: lo es cuando sube de pronto por encima del promedio reciente. `rhythm.js`
-convierte cada golpe en un destello (`beatLevel`) que enciende la luz rosa. La música
-cambia luces y la pantalla de la laptop; no mueve la cámara ni los objetos.
+dos cosas: el volumen general y el de las frecuencias graves (bombo y bajo).
+
+- **Brillo.** `lib/envelope.js` compara el volumen con la parte más fuerte de la canción
+  y entrega `energy` (0 a 1): la luz baja en las partes suaves y sube en el coro.
+- **Ritmo.** `lib/onset.js` decide si el bajo acaba de dar un golpe (sube de pronto por
+  encima de su promedio). `rhythm.js` lo convierte en `beatLevel`, un acento que cae rápido.
+
+`mood.js` junta los dos: el brillo lo pone `energy` y `beatLevel` lo hace latir encima.
+La música cambia luces y la pantalla de la laptop; no mueve la cámara ni los objetos.
 
 Si el navegador no deja analizar el audio, `rhythm.js` usa un metrónomo con el campo
 `bpm` de la playlist. El resto de la escena no se entera de cuál de las dos fuentes se usó.

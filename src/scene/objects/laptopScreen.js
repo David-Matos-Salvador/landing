@@ -8,8 +8,11 @@ import { reduceMotion } from "../../lib/env.js";
 
 const SIZE = { w: 512, h: 320 };
 const LINE_HEIGHT = 24;
-const MAX_VISIBLE_LINES = 12;
-const MARGIN = { x: 20, y: 18 };
+const TITLE_BAR_HEIGHT = 30;
+const MAX_VISIBLE_LINES = 11;
+const MARGIN = { x: 20, y: TITLE_BAR_HEIGHT + 16 };
+/** Los tres botones de una ventana de macOS: cerrar, minimizar y maximizar. */
+const WINDOW_BUTTONS = ["#FF5F57", "#FEBC2E", "#28C840"];
 
 const CODE = [
   "// room.js — 2:07 a.m.",
@@ -34,6 +37,8 @@ const THEME = {
   string: PALETTE.amber,
   text: PALETTE.paper,
   cursor: "#6FD3D8",
+  titleBar: "#241C3D",
+  titleText: "#9A91C4",
 };
 
 /** Resaltado de sintaxis mínimo: comentarios, líneas con strings y el resto. */
@@ -62,12 +67,30 @@ export function createLaptopScreen() {
     typing.nextKeyAt = t + (reduceMotion ? 0.12 : 0.05 + Math.random() * 0.09);
   }
 
+  /** Barra superior de la ventana: los tres botones y el nombre del archivo o la app. */
+  function drawTitleBar(title) {
+    ctx.fillStyle = THEME.titleBar;
+    ctx.fillRect(0, 0, SIZE.w, TITLE_BAR_HEIGHT);
+    WINDOW_BUTTONS.forEach((color, i) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(20 + i * 18, TITLE_BAR_HEIGHT / 2, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.fillStyle = THEME.titleText;
+    ctx.font = '600 14px "M PLUS 1 Code", monospace';
+    ctx.textBaseline = "middle";
+    // A la izquierda, junto a los botones: el centro lo tapa la muesca de la cámara.
+    ctx.fillText(title, 80, TITLE_BAR_HEIGHT / 2 + 1);
+  }
+
   /** @param {number} t segundos desde que empezó la escena */
   function drawCode(t) {
     if (t > typing.nextKeyAt) typeNextKey(t);
 
     ctx.fillStyle = THEME.codeBackground;
     ctx.fillRect(0, 0, SIZE.w, SIZE.h);
+    drawTitleBar("room.js");
     ctx.font = '600 17px "M PLUS 1 Code", monospace';
     ctx.textBaseline = "top";
 
@@ -95,10 +118,11 @@ export function createLaptopScreen() {
   function drawEqualizer(t, bpm) {
     ctx.fillStyle = THEME.partyBackground;
     ctx.fillRect(0, 0, SIZE.w, SIZE.h);
+    drawTitleBar("music");
     ctx.fillStyle = THEME.text;
     ctx.font = '700 22px "Bricolage Grotesque", sans-serif';
     ctx.textBaseline = "top";
-    ctx.fillText("now playing", 24, 22);
+    ctx.fillText("now playing", 24, TITLE_BAR_HEIGHT + 14);
 
     const beat = (t * bpm) / 60;
     for (let i = 0; i < 24; i++) {

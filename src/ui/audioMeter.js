@@ -1,6 +1,6 @@
 /**
- * "Escucha" la música: usa la Web Audio API del navegador para medir, en cada frame, qué
- * tan fuerte suena el bajo de la canción, y avisa cuando hay un golpe.
+ * "Escucha" la música: usa la Web Audio API del navegador para medir, en cada frame, el
+ * volumen general de la canción y el de su bajo, y avisa cuando hay un golpe.
  *
  * Cómo se conecta el audio:
  *   <audio>  ──►  analizador (mide, no modifica)  ──►  parlantes
@@ -23,8 +23,10 @@ export function createAudioMeter(audio) {
   let analyser = null;
   /** @type {AudioContext | null} */
   let context = null;
-  /** @type {Float32Array | null} */
+  /** @type {Float32Array | null} volumen de cada banda de frecuencia */
   let bands = null;
+  /** @type {Float32Array | null} la onda de sonido de los últimos milisegundos */
+  let wave = null;
   const detector = createOnsetDetector();
 
   /**
@@ -39,6 +41,7 @@ export function createAudioMeter(audio) {
         analyser.fftSize = FFT_SIZE;
         analyser.smoothingTimeConstant = SMOOTHING;
         bands = new Float32Array(analyser.frequencyBinCount);
+        wave = new Float32Array(analyser.fftSize);
         context.createMediaElementSource(audio).connect(analyser).connect(context.destination);
       }
       // El contexto puede nacer "suspendido"; sin esto la música no sonaría.
@@ -50,20 +53,30 @@ export function createAudioMeter(audio) {
     }
   }
 
+  /** Volumen general: la raíz del promedio de los cuadrados de la onda (RMS). */
+  function measureLoudness() {
+    analyser.getFloatTimeDomainData(wave); // llena `wave` con valores de -1 a 1
+    let sumOfSquares = 0;
+    for (const sample of wave) sumOfSquares += sample * sample;
+    return Math.sqrt(sumOfSquares / wave.length);
+  }
+
+  /** Volumen solo de las notas graves, donde están el bombo y el bajo. */
+  function measureBass() {
+    analyser.getFloatFrequencyData(bands); // llena `bands` con el volumen de cada banda, en decibelios
+    let power = 0;
+    for (let i = BASS_BANDS.from; i <= BASS_BANDS.to; i++) power += powerOf(bands[i]);
+    return Math.sqrt(power / (BASS_BANDS.to - BASS_BANDS.from + 1));
+  }
+
   /**
    * @param {number} t segundos desde que empezó la escena
    * @param {number} dt segundos desde el frame anterior
-   * @returns {{ bass: number, isOnset: boolean } | null} null si no hay análisis disponible
+   * @returns {{ loudness: number, isOnset: boolean } | null} null si no hay análisis disponible
    */
   function read(t, dt) {
     if (!analyser || audio.paused) return null;
-    analyser.getFloatFrequencyData(bands); // llena `bands` con el volumen de cada banda, en decibelios
-
-    let power = 0;
-    for (let i = BASS_BANDS.from; i <= BASS_BANDS.to; i++) power += powerOf(bands[i]);
-    const bass = Math.sqrt(power / (BASS_BANDS.to - BASS_BANDS.from + 1)); // amplitud media del bajo
-
-    return { bass, isOnset: detector.detect(bass, t, dt) };
+    return { loudness: measureLoudness(), isOnset: detector.detect(measureBass(), t, dt) };
   }
 
   return { start, read };
