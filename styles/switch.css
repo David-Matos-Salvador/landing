@@ -1,0 +1,78 @@
+/* Interruptor de la lámpara: botón redondo pequeño, encima del disco de música. */
+
+.switch {
+  position: fixed;
+  right: calc(clamp(18px, 3vw, 40px) + (clamp(72px, 7vw, 96px) - 48px) / 2); /* centrado sobre el disco */
+  bottom: calc(clamp(18px, 3vw, 40px) + clamp(72px, 7vw, 96px) + 14px);
+  z-index: 6;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgb(var(--text-rgb) / 0.16);
+  background: rgb(var(--bg-rgb) / 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--color-text-dim);
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.9s ease 0.6s;
+}
+
+/* Encendida: el ícono toma el color de la lámpara y el botón brilla un poco. */
+.switch[aria-pressed="true"] {
+  color: var(--color-amber);
+  border-color: color-mix(in srgb, var(--color-amber) 55%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--color-amber) 35%, transparent);
+}
+
+.switch:hover {
+  color: var(--color-text);
+}
+
+.switch:focus-visible {
+  outline: 3px solid var(--color-mint);
+  outline-offset: 4px;
+}
+
+.switch__icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Encendida: la pantalla de la lámpara se rellena. */
+.switch[aria-pressed="true"] .switch__icon path:first-child {
+  fill: currentColor;
+}
+
+body.is-loading .switch {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Móvil: debajo del disco, que ahí va arriba a la derecha ---------- */
+@media (max-width: 760px) {
+  .switch {
+    top: calc(16px + 72px + 12px);
+    right: calc(16px + (72px - 44px) / 2);
+    bottom: auto;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch {
+    transition: none;
+  }
+}

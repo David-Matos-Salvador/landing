@@ -7,11 +7,13 @@ import * as THREE from "three";
 import { AVATAR_URL } from "./config.js";
 import { loadAvatar } from "./scene/avatar.js";
 import { createCameraRig } from "./scene/cameraRig.js";
+import { createClickTargets } from "./scene/clickTargets.js";
 import { addLights } from "./scene/lights.js";
 import { applyMood } from "./scene/mood.js";
 import { createRhythm } from "./scene/rhythm.js";
 import { buildRoom } from "./scene/room.js";
 import { createStage } from "./scene/stage.js";
+import { createLampSwitch } from "./ui/lampSwitch.js";
 import { createLoader } from "./ui/loader.js";
 import { initNav } from "./ui/nav.js";
 import { createPlayer } from "./ui/player.js";
@@ -30,12 +32,22 @@ const player = createPlayer({
 });
 
 // --- 2. Escena 3D -------------------------------------------------------------------------
-const { renderer, scene, camera } = createStage(document.getElementById("scene"));
+const canvas = document.getElementById("scene");
+const { renderer, scene, camera } = createStage(canvas);
 const room = buildRoom(scene);
 const lights = addLights(scene);
 const cameraRig = createCameraRig(camera);
 const rhythm = createRhythm();
 initNav(cameraRig.sections);
+
+// La lámpara se prende y apaga desde dos lugares: el botón de la página y la lámpara 3D.
+// Los dos llaman a la misma función, así nunca quedan desincronizados.
+function toggleLamp() {
+  const isOn = room.lamp.toggle();
+  lampSwitch.show(isOn);
+}
+const lampSwitch = createLampSwitch({ button: document.getElementById("lamp-switch"), onToggle: toggleLamp });
+createClickTargets(camera, canvas).add(room.lamp.clickArea, toggleLamp);
 
 /** @type {Awaited<ReturnType<typeof loadAvatar>>} */
 let avatar = null;
@@ -89,7 +101,7 @@ function animate(timestamp) {
   });
   room.update(t);
   room.laptop.update({ t, mode, bpm });
-  room.lamp.update({ dt, t, mix: beat.mix, isOn: loader.isDone });
+  room.lamp.update({ dt, t, mix: beat.mix, isPageReady: loader.isDone });
   avatar?.pose({ dt, t, mode, beatLevel: beat.beatLevel });
   cameraRig.update(dt);
 

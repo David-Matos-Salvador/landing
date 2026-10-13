@@ -14,7 +14,7 @@ dist/                   Resultado del build; no se edita ni se sube a git
 styles/                 Un archivo CSS por componente
   tokens.css            Variables: colores, fuentes, tamaños  ← empieza por aquí
   base.css              Reset, lienzo 3D de fondo, accesibilidad global
-  loader.css  nav.css  sections.css  components.css  disc.css
+  loader.css  nav.css  sections.css  components.css  disc.css  switch.css
 src/
   main.js               Punto de entrada: crea todo y corre el loop  ← empieza por aquí
   config.js             Valores que uno querría cambiar (URLs, tempo, paleta)
@@ -33,10 +33,12 @@ src/
     rhythm.js           Convierte la música en tres números (mix, energy, beatLevel)
     mood.js             Aplica esos números a los colores de las luces
     cameraRig.js        Cámara: una toma por sección + parallax con el mouse
+    clickTargets.js     Clics sobre objetos 3D (raycaster)
     avatar.js           Avatar VRM opcional
   ui/                   Lo que no es 3D
     loader.js           Pantalla de carga
     nav.js              Resalta la sección actual en el navbar
+    lampSwitch.js       Botón que prende y apaga la lámpara
     player.js           Disco de música y modo lofi / bachata
     audioMeter.js       Mide el bajo de la canción que suena (Web Audio API)
 ```

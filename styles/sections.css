@@ -29,7 +29,7 @@
 .section:not(.hero) {
   width: min(56vw, 700px);
   padding-right: clamp(24px, 6vw, 96px);
-  background: linear-gradient(to right, rgb(var(--bg-rgb) / 0.88) 55%, rgb(var(--bg-rgb) / 0));
+  background: linear-gradient(to right, rgb(var(--bg-rgb) / 0.93) 74%, rgb(var(--bg-rgb) / 0));
 }
 
 /* El nombre toma la luz de la escena: ámbar con la lámpara, rosa con la bachata. */

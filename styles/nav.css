@@ -17,16 +17,6 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-.nav__brand {
-  padding: 8px 14px 8px 16px;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--color-glow);
-  text-decoration: none;
-  transition: color 0.8s ease;
-}
-
 .nav__links {
   display: flex;
   gap: 2px;
@@ -62,9 +52,6 @@
   .nav {
     top: auto;
     bottom: 14px;
-  }
-  .nav__brand {
-    display: none;
   }
   .nav {
     max-width: calc(100vw - 16px);

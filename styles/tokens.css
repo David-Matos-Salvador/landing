@@ -11,7 +11,7 @@
   --color-mint: #8fd6b8;
   --color-rose: #e86a92;
   --color-text: #f2e6d8;
-  --color-text-dim: rgb(var(--text-rgb) / 0.74);
+  --color-text-dim: rgb(var(--text-rgb) / 0.88);
   /* Color de acento: toma la luz de la escena (ver body[data-mode] más abajo). */
   --color-glow: var(--color-amber);
 
