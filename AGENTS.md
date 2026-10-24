@@ -9,5 +9,7 @@ comentarios en español, nombres en inglés, explicaciones simples.
   de publicar. Un push a `main` se publica solo (Coolify, Auto Deploy).
 - **Tareas:** GitHub Issues de este repo. Cerrar las resueltas y crear las que salgan.
 - **Textos:** van en `src/i18n/en.js` y `src/i18n/es.js`, con las mismas claves.
+- **De dónde sale el contenido:** la base de datos de Notion "Bitácora profesional" (skill global
+  `bitacora-profesional`). Para una versión nueva, usar solo las entradas marcadas como `Público`.
 - **Música e imágenes:** solo con derecho de uso. Nada de logos de marcas.
 - **El mapa de todos los proyectos** (servidor, dominios, servicios) está en el repo `infra`, `PROJECTS.md`.
