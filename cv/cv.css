@@ -1,0 +1,214 @@
+/* CV: en pantalla, una hoja clara sobre el fondo de la noche; al imprimir, solo la hoja en A4. */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+/* Barra de arriba: volver, descargar e idioma. */
+.toolbar {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  padding: 24px 20px 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+.toolbar__back {
+  color: var(--color-text-dim);
+  font-size: var(--fs-small);
+  text-decoration: none;
+}
+
+.toolbar__back:hover,
+.toolbar__back:focus-visible {
+  color: var(--color-amber);
+}
+
+.toolbar__download {
+  margin-left: auto;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-amber);
+  color: var(--color-bg);
+  font: 700 15px var(--font-sans);
+  cursor: pointer;
+}
+
+.toolbar__download:focus-visible,
+.toolbar__back:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 3px;
+}
+
+/* El botón de idioma de /styles/lang.css es fijo en la esquina; aquí va dentro de la barra. */
+.toolbar .lang {
+  position: static;
+}
+
+.toolbar__hint {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  padding: 0 20px 18px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--color-text-dim);
+}
+
+/* La hoja: colores de papel, independientes del tema de la página. */
+.sheet {
+  --ink: #17251d;
+  --ink-soft: #4a5d52;
+  --rule: #cfd9d1;
+  --accent: #1f6e4c;
+
+  width: min(100% - 32px, 820px);
+  margin: 0 auto 64px;
+  padding: clamp(24px, 6vw, 56px);
+  background: #fbfaf7;
+  color: var(--ink);
+  border-radius: 6px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.cv-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.cv-head__name {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.cv-head__role {
+  margin: 6px 0 0;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cv-head__contact {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 12.5px/1.7 var(--font-mono);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.cv-head__contact a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.cv-block {
+  margin-top: 20px;
+}
+
+.cv-block h2 {
+  margin: 0 0 8px;
+  font: 600 12px/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.cv-block h2.cv-sub {
+  margin-top: 16px;
+}
+
+.cv-block h3 {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+}
+
+.cv-block p {
+  margin: 0 0 6px;
+}
+
+.cv-job__meta {
+  color: var(--ink-soft);
+}
+
+.cv-list {
+  margin: 8px 0 0;
+  padding-left: 1.1em;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cv-list li::marker {
+  color: var(--accent);
+}
+
+.cv-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0 32px;
+}
+
+.cv-columns > * {
+  min-width: 0;
+}
+
+.cv-skills {
+  color: var(--ink-soft);
+}
+
+/* Datos que faltan: se ven en pantalla para no olvidarlos. */
+.pending {
+  color: #a0522d;
+  font-style: italic;
+}
+
+/* Al imprimir: solo la hoja, en A4, sin fondo ni botones. */
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+
+  .toolbar,
+  .toolbar__hint {
+    display: none;
+  }
+
+  .sheet {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    font-size: 11pt;
+  }
+
+  .cv-block,
+  .cv-list li {
+    break-inside: avoid;
+  }
+}

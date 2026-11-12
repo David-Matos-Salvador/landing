@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>David Matos · CV</title>
+    <meta name="description" content="CV of David Matos, full-stack developer who works with AI agents." />
+    <meta name="theme-color" content="#0F1E1A" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23FFB45C'/></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=M+PLUS+1+Code:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/cv/cv.css" />
+    <link rel="stylesheet" href="/styles/lang.css" />
+  </head>
+  <body>
+    <!--
+      El CV usa los mismos textos que la landing (src/i18n/en.js y es.js): al cambiar un texto
+      allá, cambia aquí también. Lo marcado con .pending es información que todavía falta.
+    -->
+    <div class="toolbar">
+      <a class="toolbar__back" href="/" data-i18n="cv.back">Back to the room</a>
+      <button id="download" class="toolbar__download" type="button" data-i18n="cv.download">
+        Download PDF
+      </button>
+      <button id="language" class="lang" type="button">
+        <span data-lang="en">EN</span><span aria-hidden="true">/</span><span data-lang="es">ES</span>
+      </button>
+    </div>
+    <p class="toolbar__hint" data-i18n="cv.downloadHint">
+      Opens your browser's print window. Choose "Save as PDF".
+    </p>
+
+    <main class="sheet">
+      <header class="cv-head">
+        <div>
+          <h1 class="cv-head__name">David Matos</h1>
+          <p class="cv-head__role" data-i18n="cv.role">Full-stack developer · AI-first</p>
+        </div>
+        <ul class="cv-head__contact">
+          <li><a href="https://davidmatos.lat">davidmatos.lat</a></li>
+          <li>
+            <a href="https://www.linkedin.com/in/victor-david-m-1b77a718b/"
+              >linkedin.com/in/victor-david-m-1b77a718b</a
+            >
+          </li>
+          <li><a href="https://github.com/David-Matos-Salvador">github.com/David-Matos-Salvador</a></li>
+          <li class="pending">
+            <span data-i18n="cv.pending">To fill in</span>:
+            <span data-i18n="cv.pendingContact">Email and city</span>
+          </li>
+        </ul>
+      </header>
+
+      <section class="cv-block">
+        <h2 data-i18n="cv.summaryLabel">Profile</h2>
+        <p data-i18n="hero.tagline">I design the system, direct the agents and verify what ships.</p>
+        <p data-i18n="about.p2">
+          My edge is how I work with AI agents: I decide what gets built and how it's checked; they do the
+          typing.
+        </p>
+      </section>
+
+      <section class="cv-block">
+        <h2 data-i18n="cv.experienceLabel">Experience</h2>
+        <div class="cv-job">
+          <h3 data-i18n="cv.jobTitle">Full-stack developer · Growth team</h3>
+          <p class="cv-job__meta">
+            <span data-i18n="cv.jobCompany">Online travel company</span> ·
+            <span class="pending"
+              ><span data-i18n="cv.pending">To fill in</span>:
+              <span data-i18n="cv.pendingDates">Dates</span></span
+            >
+          </p>
+        </div>
+        <ul class="cv-list">
+          <li>
+            <strong data-i18n="work.lead.title">Tech lead on a new project</strong> —
+            <span data-i18n="work.lead.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="work.site.title">A server-rendered site</strong> —
+            <span data-i18n="work.site.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="work.editor.title">A publishing flow</strong> —
+            <span data-i18n="work.editor.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="work.load.title">A Go service</strong> —
+            <span data-i18n="work.load.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="work.debug.title">Production bugs</strong> —
+            <span data-i18n="work.debug.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="work.rag.title">A RAG proof of concept</strong> —
+            <span data-i18n="work.rag.text"></span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="cv-block">
+        <h2 data-i18n="cv.agentsLabel">AI and agents</h2>
+        <ul class="cv-list">
+          <li>
+            <strong data-i18n="agents.team.title">One setup for the whole team</strong> —
+            <span data-i18n="agents.team.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="agents.builder.title">Pages built without a developer</strong> —
+            <span data-i18n="agents.builder.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="agents.review.title">PR reviews</strong> —
+            <span data-i18n="agents.review.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="agents.qa.title">A QA agent</strong> — <span data-i18n="agents.qa.text"></span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="cv-block">
+        <h2 data-i18n="cv.projectsLabel">Personal projects</h2>
+        <ul class="cv-list">
+          <li>
+            <strong data-i18n="projects.gymapp.title">gymapp</strong> —
+            <span data-i18n="projects.gymapp.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="projects.cloud.title">My own cloud</strong> —
+            <span data-i18n="projects.cloud.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="projects.agent.title">My own AI agent</strong> —
+            <span data-i18n="projects.agent.text"></span>
+          </li>
+          <li>
+            <strong data-i18n="projects.music.title">App Music</strong> —
+            <span data-i18n="projects.music.text"></span>
+          </li>
+        </ul>
+      </section>
+
+      <div class="cv-columns">
+        <section class="cv-block">
+          <h2 data-i18n="cv.educationLabel">Education</h2>
+          <h3 data-i18n="cv.degree">Systems Engineering and Business Management</h3>
+          <p class="cv-job__meta" data-i18n="cv.school">Universidad San Ignacio de Loyola (USIL)</p>
+          <h2 class="cv-sub" data-i18n="cv.languagesLabel">Languages</h2>
+          <p data-i18n="cv.languages">Spanish (native) · English (in progress)</p>
+        </section>
+        <section class="cv-block">
+          <h2 data-i18n="cv.skillsLabel">Skills</h2>
+          <p class="cv-skills">
+            TypeScript · Angular (SSR) · Node.js · Go · MongoDB · Redis · PostgreSQL · Next.js · Docker ·
+            Kubernetes · Coolify · GitHub Actions · Bitbucket · SonarCloud · Playwright · Loki · Claude Code ·
+            Codex · Kilo Code · Kimi Code · Cursor · DeepSeek · MCP · RAG · Notion
+          </p>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="/src/cv.js"></script>
+  </body>
+</html>

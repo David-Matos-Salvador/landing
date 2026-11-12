@@ -4,7 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>David Matos</title>
-    <meta name="description" content="David Matos builds things for the web, and the server they run on." />
+    <meta
+      name="description"
+      content="David Matos designs the system, directs the AI agents and verifies what ships."
+    />
     <meta name="theme-color" content="#0F1E1A" />
     <link
       rel="icon"
@@ -45,6 +48,7 @@
       <ul class="nav__links">
         <li><a href="#room" data-section="room" aria-current="true" data-i18n="nav.room">Room</a></li>
         <li><a href="#about" data-section="about" data-i18n="nav.about">About</a></li>
+        <li><a href="#agents" data-section="agents" data-i18n="nav.agents">Agents</a></li>
         <li><a href="#work" data-section="work" data-i18n="nav.work">Work</a></li>
         <li><a href="#projects" data-section="projects" data-i18n="nav.projects">Projects</a></li>
         <li><a href="#life" data-section="life" data-i18n="nav.life">Life</a></li>
@@ -75,171 +79,176 @@
     <main class="page">
       <section id="room" class="section hero" data-section="room">
         <header class="intro">
-          <p class="eyebrow" data-i18n="hero.eyebrow">Full-stack web developer</p>
+          <p class="eyebrow" data-i18n="hero.eyebrow">Full-stack AI engineer</p>
           <h1 class="name">David<br />Matos</h1>
           <p class="tagline" data-i18n="hero.tagline">
-            I build things for the web, and the server they run on.
+            I design the system, direct the agents and verify what ships.
           </p>
+          <div class="cta-row">
+            <a class="cta" href="#agents" data-i18n="hero.ctaWork">See how I work</a>
+            <a class="cta cta--ghost" href="/cv/" data-i18n="hero.ctaCv">Download my CV</a>
+          </div>
         </header>
       </section>
 
       <section id="about" class="section" data-section="about">
-        <p class="eyebrow" data-i18n="about.eyebrow">01 / About</p>
-        <h2 class="section__title" data-i18n="about.title">Hi, I'm <span class="hl">David.</span></h2>
+        <h2 class="section__title" data-i18n="about.title">
+          I wrote every line by hand. Now I <span class="hl">direct the agents.</span>
+        </h2>
+        <!-- Línea de tiempo real (años de LinkedIn): de programar a mano a orquestar agentes. -->
+        <ol class="timeline">
+          <li>
+            <span class="timeline__year">2020</span>
+            <h3 data-i18n="about.t1.title">By hand</h3>
+            <p data-i18n="about.t1.text">Java, Spring and Angular for a public registry.</p>
+          </li>
+          <li>
+            <span class="timeline__year">2022</span>
+            <h3 data-i18n="about.t2.title">Full-stack</h3>
+            <p data-i18n="about.t2.text">Angular SSR, Node, MongoDB and Redis, in production.</p>
+          </li>
+          <li class="timeline__now">
+            <span class="timeline__year">2026</span>
+            <h3 data-i18n="about.t3.title">Orchestrator</h3>
+            <p data-i18n="about.t3.text">I design and verify. Agents write the code.</p>
+          </li>
+        </ol>
         <p class="section__text" data-i18n="about.p1">
-          I'm a full-stack web developer. By day I build a travel site with Angular and Node: server-rendered
-          pages, the APIs behind them and the tests that keep them honest.
+          Today I'm a full-stack AI engineer at an online travel company.
         </p>
-        <p class="section__text" data-i18n="about.p2">
-          I work AI-first. I write the spec, direct the coding agents, and review every change myself before
-          it ships.
-        </p>
-
-        <h3 class="label" data-i18n="about.howLabel">How I work</h3>
-        <ul class="ways">
-          <li data-i18n="about.way1">
-            <strong>Analysis before code.</strong> I compare the options first, then build the one that wins.
-          </li>
-          <li data-i18n="about.way2">
-            <strong>Why, until the root cause.</strong> I'd rather say "I'm lost" than ship a fix I don't
-            understand.
-          </li>
-          <li data-i18n="about.way3">
-            <strong>Write it down.</strong> Every project of mine has one guide that could rebuild it from
-            zero.
-          </li>
-        </ul>
-
-        <h3 class="label" data-i18n="about.dailyLabel">Every day</h3>
+        <h3 class="label" data-i18n="about.stackLabel">What I build with</h3>
         <ul class="stack">
           <li>TypeScript</li>
           <li>Angular</li>
           <li>Node.js</li>
+          <li>Go</li>
           <li>MongoDB</li>
-          <li>Redis</li>
-        </ul>
-        <h3 class="label" data-i18n="about.alsoLabel">Also in my toolbox</h3>
-        <ul class="stack stack--soft">
-          <li>Next.js</li>
           <li>PostgreSQL</li>
-          <li>Prisma</li>
+          <li>Redis</li>
           <li>Docker</li>
-          <li>Java</li>
-          <li>Three.js</li>
+          <li>Kubernetes</li>
+        </ul>
+      </section>
+
+      <section id="agents" class="section" data-section="agents">
+        <h2 class="section__title" data-i18n="agents.title">I design. Agents build. I verify.</h2>
+        <!-- Es un ciclo de verdad (siempre en este orden), por eso va como lista numerada. -->
+        <ol class="loop">
+          <li>
+            <h3 data-i18n="agents.step1.title">Design</h3>
+            <p data-i18n="agents.step1.text">Spec, rules and limits, written before any code.</p>
+          </li>
+          <li>
+            <h3 data-i18n="agents.step2.title">Delegate</h3>
+            <p data-i18n="agents.step2.text">Agents write the code, run the tests and bring evidence.</p>
+          </li>
+          <li>
+            <h3 data-i18n="agents.step3.title">Verify</h3>
+            <p data-i18n="agents.step3.text">Passing tests aren't proof. I check the real thing.</p>
+          </li>
+        </ol>
+        <!-- Los agentes que tengo trabajando: roles, sin cifras que haya que actualizar. -->
+        <ul class="crew">
+          <li>
+            <h3 data-i18n="agents.crew1.title">The night QA</h3>
+            <p data-i18n="agents.crew1.text">
+              Explores my app every night, fixes what it finds and waits for my review.
+            </p>
+          </li>
+          <li>
+            <h3 data-i18n="agents.crew2.title">The reviewer</h3>
+            <p data-i18n="agents.crew2.text">Prepares every pull request review. The final call is mine.</p>
+          </li>
+          <li>
+            <h3 data-i18n="agents.crew3.title">The assistant</h3>
+            <p data-i18n="agents.crew3.text">
+              Lives on my server and talks to me on Telegram, with separate memory for work and life.
+            </p>
+          </li>
+        </ul>
+        <!-- No dependo de un solo modelo: uso el agente que mejor resuelve cada tarea. -->
+        <h3 class="label" data-i18n="agents.toolsLabel">Not tied to one model</h3>
+        <ul class="stack stack--soft">
+          <li>Claude Code</li>
+          <li>Codex</li>
+          <li>Kilo Code</li>
+          <li>Kimi Code</li>
+          <li>Cursor</li>
+          <li>DeepSeek</li>
+          <li>MCP</li>
         </ul>
       </section>
 
       <section id="work" class="section" data-section="work">
-        <p class="eyebrow" data-i18n="work.eyebrow">02 / Work</p>
         <h2 class="section__title" data-i18n="work.title">My <span class="hl">day job</span></h2>
-        <p class="section__text" data-i18n="work.intro">
-          I work on the growth team of an online travel company. Some of what I've done there:
-        </p>
-        <ul class="work">
+        <ul class="work work--compact">
+          <li class="work__item"><h3 data-i18n="work.list.lead">Tech lead, from zero to production</h3></li>
           <li class="work__item">
-            <h3 data-i18n="work.site.title">A travel site, rendered on the server</h3>
-            <p data-i18n="work.site.text">Angular SSR so pages load fast and search engines can read them.</p>
+            <h3 data-i18n="work.list.site">Moved a server-rendered site to a new backend</h3>
           </li>
           <li class="work__item">
-            <h3 data-i18n="work.editor.title">An editor for marketing pages</h3>
-            <p data-i18n="work.editor.text">
-              Versions, scheduled publishing and safe previews, plus the test suite that guards it.
-            </p>
+            <h3 data-i18n="work.list.load">A Go service hardened for traffic spikes</h3>
           </li>
           <li class="work__item">
-            <h3 data-i18n="work.ai.title">AI in the team's workflow</h3>
-            <p data-i18n="work.ai.text">
-              Specs, quality gates and review skills, so coding agents ship code we can trust.
-            </p>
-          </li>
-          <li class="work__item">
-            <h3 data-i18n="work.rag.title">A RAG proof of concept</h3>
-            <p data-i18n="work.rag.text">
-              Two ways to answer questions over documents, compared by cost, speed and quality.
-            </p>
+            <h3 data-i18n="work.list.rag">A RAG proof of concept, measured by cost and quality</h3>
           </li>
         </ul>
       </section>
 
       <section id="projects" class="section" data-section="projects">
-        <p class="eyebrow" data-i18n="projects.eyebrow">03 / Projects</p>
         <h2 class="section__title" data-i18n="projects.title">Built <span class="hl">after hours</span></h2>
         <ul class="work">
           <li class="work__item">
             <h3 data-i18n="projects.gymapp.title">gymapp</h3>
-            <p data-i18n="projects.gymapp.text">
-              An app for gyms: routines, a workout player, classes and payments, for members, coaches and
-              admins.
-            </p>
-            <p class="work__tags">Next.js · Prisma · PostgreSQL · Redis</p>
+            <p data-i18n="projects.gymapp.line">A gym app for members, coaches and admins.</p>
+            <p class="work__tags">Next.js · PostgreSQL · Redis</p>
           </li>
           <li class="work__item">
             <h3 data-i18n="projects.cloud.title">My own cloud</h3>
-            <p data-i18n="projects.cloud.text">
-              One server that runs everything I make: deploys from GitHub, HTTPS, monitoring and alerts on
-              Telegram.
-            </p>
-            <p class="work__tags">Ubuntu · Docker · Coolify · GitHub Actions</p>
+            <p data-i18n="projects.cloud.line">One server that runs all my apps.</p>
+            <p class="work__tags">Docker · Coolify · GitHub Actions</p>
           </li>
           <li class="work__item">
             <h3 data-i18n="projects.agent.title">My own AI agent</h3>
-            <p data-i18n="projects.agent.text">
-              A self-hosted agent I talk to on Telegram, with one profile for my career and one for me.
-            </p>
+            <p data-i18n="projects.agent.line">It lives on my server and talks to me on Telegram.</p>
             <p class="work__tags">Hermes Agent · Docker</p>
           </li>
           <li class="work__item">
             <h3 data-i18n="projects.room.title">This room</h3>
-            <p data-i18n="projects.room.text">
-              A 3D scene that turns into a bachata party when you press play.
-            </p>
-            <p class="work__tags">Three.js · WebGL shaders</p>
+            <p data-i18n="projects.room.line">Lights that follow the real beat of the song.</p>
+            <p class="work__tags">Three.js · Web Audio API</p>
           </li>
         </ul>
       </section>
 
       <section id="life" class="section" data-section="life">
-        <p class="eyebrow" data-i18n="life.eyebrow">04 / Life</p>
         <h2 class="section__title" data-i18n="life.title">Away from the <span class="hl">keyboard</span></h2>
         <ul class="life">
           <li>
             <h3 data-i18n="life.bachata.title">Bachata</h3>
-            <p data-i18n="life.bachata.text">
-              Classes and socials. The goal: feel the music instead of counting steps.
-            </p>
+            <p data-i18n="life.bachata.text">Feel it, don't count it.</p>
           </li>
           <li>
             <h3 data-i18n="life.anime.title">Anime</h3>
-            <p data-i18n="life.anime.text">One Piece first. Yes, all of it.</p>
+            <p data-i18n="life.anime.text">One Piece. All of it.</p>
           </li>
           <li>
             <h3 data-i18n="life.gym.title">The gym</h3>
-            <p data-i18n="life.gym.text">Discipline you can measure. It's why I built gymapp.</p>
-          </li>
-          <li>
-            <h3 data-i18n="life.math.title">Math for 3D</h3>
-            <p data-i18n="life.math.text">Learning trigonometry to write my own 3D renderer in a terminal.</p>
-          </li>
-          <li>
-            <h3 data-i18n="life.philosophy.title">Philosophy</h3>
-            <p data-i18n="life.philosophy.text">Existentialism and a daily memento mori.</p>
-          </li>
-          <li>
-            <h3 data-i18n="life.english.title">English</h3>
-            <p data-i18n="life.english.text">Practicing every day. This page is part of the homework.</p>
+            <p data-i18n="life.gym.text">Discipline you can measure.</p>
           </li>
         </ul>
       </section>
 
       <section id="contact" class="section" data-section="contact">
-        <p class="eyebrow" data-i18n="contact.eyebrow">05 / Contact</p>
-        <h2 class="section__title" data-i18n="contact.title">Say <span class="hl">hi</span></h2>
-        <p class="section__text" data-i18n="contact.text">The easiest way to find me and my code.</p>
+        <h2 class="section__title" data-i18n="contact.title">
+          Let's build <span class="hl">something</span>
+        </h2>
         <div class="links">
           <a href="https://www.linkedin.com/in/victor-david-m-1b77a718b/" target="_blank" rel="noopener"
             >LinkedIn</a
           >
           <a href="https://github.com/David-Matos-Salvador" target="_blank" rel="noopener">GitHub</a>
+          <a href="/cv/" data-i18n="contact.cv">My CV</a>
           <a href="/links/" data-i18n="contact.allLinks">All my links</a>
         </div>
       </section>

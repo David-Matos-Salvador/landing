@@ -16,6 +16,7 @@ const v = (x, y, z) => new THREE.Vector3(x, y, z);
 const SHOTS = [
   { id: "room", position: v(6.5, 4.7, 7.6), lookAt: v(-0.7, 1.35, -0.7) }, // el cuarto
   { id: "about", position: v(1.2, 2.9, 1.6), lookAt: v(-0.6, 2.5, -2.5) }, // la ventana
+  { id: "agents", position: v(0.2, 2.3, 1.0), lookAt: v(-2.45, 1.45, -1.45) }, // la lámpara
   { id: "work", position: v(-0.2, 1.9, 0.9), lookAt: v(-2.2, 1.2, -0.6) }, // la laptop
   { id: "projects", position: v(0.5, 2.4, 0.9), lookAt: v(0.7, 2.05, -2.5) }, // la repisa
   { id: "life", position: v(0.6, 2.6, 0.3), lookAt: v(-3.0, 2.45, 0.0) }, // el cuadro

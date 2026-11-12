@@ -11,10 +11,11 @@ export default defineConfig({
     // Three.js solo ya pesa ~590 kB minificado (150 kB comprimido): subimos el aviso por encima de eso.
     chunkSizeWarningLimit: 700,
     rollupOptions: {
-      // Dos páginas: la principal y el linktree. Cada una carga solo lo que usa.
+      // Tres páginas: la principal, el linktree y el CV. Cada una carga solo lo que usa.
       input: {
         main: resolve(import.meta.dirname, "index.html"),
         links: resolve(import.meta.dirname, "links/index.html"),
+        cv: resolve(import.meta.dirname, "cv/index.html"),
       },
     },
   },

@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { en } from "./en.js";
 import { es } from "./es.js";
 
-const PAGES = ["index.html", "links/index.html"];
+const PAGES = ["index.html", "links/index.html", "cv/index.html"];
 
 test("inglés y español tienen exactamente las mismas claves", () => {
   assert.deepEqual(Object.keys(es).sort(), Object.keys(en).sort());

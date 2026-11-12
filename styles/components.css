@@ -91,9 +91,10 @@
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Tres tarjetas en una fila; en teléfono pasan a una columna (ver el @media de abajo). */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  max-width: 560px;
+  max-width: 620px;
 }
 
 .life li {
@@ -137,8 +138,210 @@
   border-color: var(--color-glow);
 }
 
+/* Botones del hero: el principal toma la luz de la escena; el segundo es solo contorno. */
+.cta-row {
+  margin-top: 1.6em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cta {
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: var(--color-glow);
+  color: var(--color-bg);
+  font-weight: 700;
+  font-size: 17px;
+  text-decoration: none;
+  transition:
+    background 0.8s ease,
+    transform 0.2s ease;
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-mint);
+  outline-offset: 3px;
+}
+
+.cta--ghost {
+  background: none;
+  color: var(--color-text);
+  box-shadow: inset 0 0 0 2px rgb(var(--text-rgb) / 0.35);
+}
+
+/* El ciclo Diseño → Delego → Verifico: tres pasos en fila, unidos por una línea. */
+.loop {
+  margin: 0.4em 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 620px;
+}
+
+.loop li {
+  counter-increment: step;
+  padding-top: 14px;
+  border-top: 2px solid color-mix(in srgb, var(--color-glow) 70%, transparent);
+}
+
+/* El número del paso: el orden importa, por eso se muestra. */
+.loop li::before {
+  content: counter(step);
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-mint);
+}
+
+.loop h3 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-glow);
+  transition: color 0.8s ease;
+}
+
+.loop p {
+  margin: 0.3em 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--color-text-dim);
+}
+
+/* El equipo de agentes: cada rol con su nombre en la luz de la escena y una línea. */
+.crew {
+  margin: 34px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+  max-width: 540px;
+}
+
+.crew li {
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgb(var(--bg-rgb) / 0.6);
+  border: 1px solid rgb(var(--text-rgb) / 0.12);
+}
+
+.crew h3 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--color-glow);
+  transition: color 0.8s ease;
+}
+
+.crew p {
+  margin: 0.2em 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--color-text-dim);
+}
+
+/* Trabajo en versión corta: solo titulares, más juntos. */
+.work--compact {
+  gap: 14px;
+}
+
+.work--compact .work__item h3 {
+  max-width: 26ch;
+}
+
+/* Línea de tiempo: lo de antes queda apagado; el presente toma la luz de la escena. */
+.timeline {
+  margin: 0.4em 0 1.4em;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 18px;
+  max-width: 520px;
+  border-left: 2px solid rgb(var(--text-rgb) / 0.18);
+}
+
+.timeline li {
+  position: relative;
+  padding-left: 22px;
+  display: grid;
+  grid-template-columns: 4.5ch minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: baseline;
+  color: var(--color-text-dim);
+}
+
+/* El punto sobre la línea. */
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 0.55em;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  box-shadow: inset 0 0 0 2px rgb(var(--text-rgb) / 0.35);
+}
+
+.timeline__year {
+  grid-row: span 2;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--color-mint);
+}
+
+.timeline h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: rgb(var(--text-rgb) / 0.7);
+}
+
+.timeline p {
+  margin: 0.1em 0 0;
+  font-size: 16px;
+}
+
+.timeline__now h3 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-glow);
+  transition: color 0.8s ease;
+}
+
+.timeline__now p {
+  color: var(--color-text);
+}
+
+.timeline li.timeline__now::before {
+  background: var(--color-glow);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-glow) 25%, transparent);
+}
+
 /* ---------- Móvil ---------- */
 @media (max-width: 760px) {
+  .life {
+    grid-template-columns: 1fr;
+  }
+
+  .loop {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .loop h3 {
+    font-size: 24px;
+  }
   .life {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
