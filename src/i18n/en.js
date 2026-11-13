@@ -137,7 +137,7 @@ export const en = {
   "cv.school": "Universidad San Ignacio de Loyola (USIL) · expected 2027",
   "cv.skillsLabel": "Skills",
   "cv.languagesLabel": "Languages",
-  "cv.languages": "Spanish (native) · English (in progress)",
+  "cv.languages": "Spanish (native) · English (B2)",
   "cv.pending": "To fill in",
   "cv.pendingDates": "Dates",
   "cv.pendingContact": "Email and city",

@@ -139,7 +139,7 @@ export const es = {
   "cv.school": "Universidad San Ignacio de Loyola (USIL) · término previsto: 2027",
   "cv.skillsLabel": "Habilidades",
   "cv.languagesLabel": "Idiomas",
-  "cv.languages": "Español (nativo) · Inglés (en progreso)",
+  "cv.languages": "Español (nativo) · Inglés (B2)",
   "cv.pending": "Por completar",
   "cv.pendingDates": "Fechas",
   "cv.pendingContact": "Correo y ciudad",
