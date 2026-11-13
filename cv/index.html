@@ -23,7 +23,7 @@
   <body>
     <!--
       El CV usa los mismos textos que la landing (src/i18n/en.js y es.js): al cambiar un texto
-      allá, cambia aquí también. Lo marcado con .pending es información que todavía falta.
+      allá, cambia aquí también. Las fechas y los trabajos anteriores salen de LinkedIn.
     -->
     <div class="toolbar">
       <a class="toolbar__back" href="/" data-i18n="cv.back">Back to the room</a>
@@ -42,7 +42,7 @@
       <header class="cv-head">
         <div>
           <h1 class="cv-head__name">David Matos</h1>
-          <p class="cv-head__role" data-i18n="cv.role">Full-stack developer · AI-first</p>
+          <p class="cv-head__role" data-i18n="cv.role">Full-stack software engineer · applied AI</p>
         </div>
         <ul class="cv-head__contact">
           <li><a href="https://davidmatos.lat">davidmatos.lat</a></li>
@@ -52,32 +52,31 @@
             >
           </li>
           <li><a href="https://github.com/David-Matos-Salvador">github.com/David-Matos-Salvador</a></li>
-          <li class="pending">
-            <span data-i18n="cv.pending">To fill in</span>:
-            <span data-i18n="cv.pendingContact">Email and city</span>
-          </li>
+          <li><a href="mailto:developerdavidmatos@gmail.com">developerdavidmatos@gmail.com</a></li>
+          <li><a href="tel:+51920578968">+51 920 578 968</a></li>
+          <li data-i18n="cv.location">Lima, Peru</li>
         </ul>
       </header>
 
       <section class="cv-block">
         <h2 data-i18n="cv.summaryLabel">Profile</h2>
-        <p data-i18n="hero.tagline">I design the system, direct the agents and verify what ships.</p>
-        <p data-i18n="about.p2">
-          My edge is how I work with AI agents: I decide what gets built and how it's checked; they do the
-          typing.
+        <p data-i18n="cv.summary1">
+          Full-stack software engineer with 6+ years building and running web applications in production with
+          Angular, Node.js, Java and Go.
+        </p>
+        <p data-i18n="cv.summary2">
+          Today I use AI agents to ship faster: I set the design and the rules, review every change and answer
+          for what goes to production.
         </p>
       </section>
 
       <section class="cv-block">
         <h2 data-i18n="cv.experienceLabel">Experience</h2>
         <div class="cv-job">
-          <h3 data-i18n="cv.jobTitle">Full-stack developer · Growth team</h3>
+          <h3 data-i18n="cv.jobTitle">Senior full-stack developer · Growth team</h3>
           <p class="cv-job__meta">
-            <span data-i18n="cv.jobCompany">Online travel company</span> ·
-            <span class="pending"
-              ><span data-i18n="cv.pending">To fill in</span>:
-              <span data-i18n="cv.pendingDates">Dates</span></span
-            >
+            <span data-i18n="cv.jobCompany">Cocha · Remote</span> ·
+            <span data-i18n="cv.job1.dates">May 2026 – Present</span>
           </p>
         </div>
         <ul class="cv-list">
@@ -106,6 +105,37 @@
             <span data-i18n="work.rag.text"></span>
           </li>
         </ul>
+        <!-- Trabajos anteriores, del más reciente al más antiguo (mismos datos que en LinkedIn). -->
+        <div class="cv-job cv-job--past">
+          <h3 data-i18n="cv.job2.title">Full-stack developer</h3>
+          <p class="cv-job__meta" data-i18n="cv.job2.meta">Dyamanto · Aug 2022 – May 2026</p>
+          <p data-i18n="cv.job2.text">
+            Built an admin panel that works as a CMS, took part in moving the main landing-pages app to SSR,
+            and migrated the UI of the checkout page.
+          </p>
+        </div>
+        <div class="cv-job cv-job--past">
+          <h3 data-i18n="cv.job3.title">Full-stack Angular developer</h3>
+          <p class="cv-job__meta" data-i18n="cv.job3.meta">NTT DATA Europe & LATAM · Jan 2022 – Sep 2022</p>
+          <p data-i18n="cv.job3.text">
+            Built and supported Ionic and Angular apps, with Java (Spring Boot) microservices and data on
+            Azure.
+          </p>
+        </div>
+        <div class="cv-job cv-job--past">
+          <h3 data-i18n="cv.job4.title">Full-stack developer</h3>
+          <p class="cv-job__meta" data-i18n="cv.job4.meta">AD Y L Consulting · Oct 2021 – Dec 2021</p>
+          <p data-i18n="cv.job4.text">
+            Angular front end split into micro-frontends (Single SPA), plus a Java (Spring Boot) microservice.
+          </p>
+        </div>
+        <div class="cv-job cv-job--past">
+          <h3 data-i18n="cv.job5.title">Programmer analyst</h3>
+          <p class="cv-job__meta" data-i18n="cv.job5.meta">Sunarp · Mar 2020 – Jun 2021</p>
+          <p data-i18n="cv.job5.text">
+            Moved legacy modules and a nationwide help-desk system to Spring Framework and Angular.
+          </p>
+        </div>
       </section>
 
       <section class="cv-block">
@@ -155,17 +185,28 @@
         <section class="cv-block">
           <h2 data-i18n="cv.educationLabel">Education</h2>
           <h3 data-i18n="cv.degree">Systems Engineering and Business Management</h3>
-          <p class="cv-job__meta" data-i18n="cv.school">Universidad San Ignacio de Loyola (USIL)</p>
+          <p class="cv-job__meta" data-i18n="cv.school">
+            Universidad San Ignacio de Loyola (USIL) · 2024 – 2027 (expected)
+          </p>
+          <h3 data-i18n="cv.degree2">Information and Communication Technologies (ICT), technical degree</h3>
+          <p class="cv-job__meta" data-i18n="cv.school2">SENATI · 2017 – 2020</p>
           <h2 class="cv-sub" data-i18n="cv.languagesLabel">Languages</h2>
           <p data-i18n="cv.languages">Spanish (native) · English (B2)</p>
         </section>
         <section class="cv-block">
           <h2 data-i18n="cv.skillsLabel">Skills</h2>
           <p class="cv-skills">
-            TypeScript · Angular (SSR) · Node.js · Go · MongoDB · Redis · PostgreSQL · Next.js · Docker ·
-            Kubernetes · Coolify · GitHub Actions · Bitbucket · SonarCloud · Playwright · Loki · Claude Code ·
-            Codex · Kilo Code · Kimi Code · Cursor · DeepSeek · MCP · RAG · Notion
+            TypeScript · Angular (SSR) · Node.js · Go · Java · Spring Boot · MongoDB · Redis · PostgreSQL ·
+            Next.js · Docker · Kubernetes · Coolify · GitHub Actions · Bitbucket · SonarCloud · Playwright ·
+            Loki · Claude Code · Codex · Kilo Code · Kimi Code · Cursor · DeepSeek · MCP · RAG · Notion
           </p>
+          <h2 class="cv-sub" data-i18n="cv.certsLabel">Certifications</h2>
+          <ul class="cv-list">
+            <li data-i18n="cv.cert1">Full-stack development with Cursor · Udemy, 2026</li>
+            <li data-i18n="cv.cert2">Angular Testing · DecodedFrontend, 2024</li>
+            <li data-i18n="cv.cert3">JavaScript Algorithms and Data Structures · freeCodeCamp, 2023</li>
+            <li data-i18n="cv.cert4">Spoken English Proficiency · SmallTalk2Me, 2023</li>
+          </ul>
         </section>
       </div>
     </main>

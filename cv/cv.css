@@ -175,10 +175,14 @@ body {
   color: var(--ink-soft);
 }
 
-/* Datos que faltan: se ven en pantalla para no olvidarlos. */
-.pending {
-  color: #a0522d;
-  font-style: italic;
+/* Trabajos anteriores: separados del actual y sin partirse entre dos hojas al imprimir. */
+.cv-job--past {
+  margin-top: 12px;
+  break-inside: avoid;
+}
+
+.cv-block h3 + .cv-job__meta + h3 {
+  margin-top: 10px;
 }
 
 /* Al imprimir: solo la hoja, en A4, sin fondo ni botones. */
