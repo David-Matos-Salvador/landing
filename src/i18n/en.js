@@ -138,7 +138,7 @@ export const en = {
   "cv.projectsLabel": "Personal projects",
   "cv.educationLabel": "Education",
   "cv.degree": "Systems Engineering and Business Management",
-  "cv.school": "Universidad San Ignacio de Loyola (USIL) · 2024 – 2027 (expected)",
+  "cv.school": "Universidad San Ignacio de Loyola (USIL) · 11th of 12 terms · expected 2027",
   "cv.skillsLabel": "Skills",
   "cv.languagesLabel": "Languages",
   "cv.languages": "Spanish (native) · English (B2)",

@@ -140,7 +140,7 @@ export const es = {
   "cv.projectsLabel": "Proyectos personales",
   "cv.educationLabel": "Formación",
   "cv.degree": "Ingeniería de Sistemas y Gestión Empresarial",
-  "cv.school": "Universidad San Ignacio de Loyola (USIL) · 2024 – 2027 (previsto)",
+  "cv.school": "Universidad San Ignacio de Loyola (USIL) · 11.º ciclo (penúltimo) · término previsto: 2027",
   "cv.skillsLabel": "Habilidades",
   "cv.languagesLabel": "Idiomas",
   "cv.languages": "Español (nativo) · Inglés (B2)",
