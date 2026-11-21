@@ -211,8 +211,23 @@ body {
     font-size: 11pt;
   }
 
-  .cv-block,
+  /*
+   * Las secciones largas (Experiencia) sí pueden partirse entre hojas: si no, el navegador
+   * empuja la sección entera a la hoja 2 y deja la 1 casi vacía. Lo que no se parte es cada
+   * viñeta y cada trabajo anterior (.cv-job--past ya lo trae arriba).
+   */
   .cv-list li {
     break-inside: avoid;
+  }
+
+  /*
+   * Un título nunca queda solo al pie de una hoja: se va con lo que encabeza. Ojo: no
+   * ponerlo en .cv-job, porque los trabajos anteriores también tienen esa clase y quedarían
+   * pegados entre sí, moviéndose juntos a la hoja siguiente.
+   */
+  .cv-block h2,
+  .cv-block h3,
+  .cv-job__meta {
+    break-after: avoid;
   }
 }
